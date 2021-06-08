@@ -17,7 +17,12 @@ export const theme = extendTheme({
     global: {
       body: {
         bg: '#f2f2f2',
-        color: 'text.default'
+        color: '#fff',
+        fontSize: '0.875rem',
+      },
+      p: {
+        margin: 0,
+        lineHeight: '1rem'
       }
     }
   }
