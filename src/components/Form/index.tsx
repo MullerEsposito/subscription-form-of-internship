@@ -1,23 +1,28 @@
-import { useState } from "react";
 import { 
-  FormControl, FormLabel, Stack, Radio, Grid, Box, Button
+  FormControl, FormLabel, Grid, Box, Button, useBreakpointValue
 } from "@chakra-ui/react";
 
 
 import { InputFile } from "./InputFile";
 import { Input } from "./Input";
 import { RadioGroup } from "./RadioGroup";
+import { pcdOptions, periodOptions } from "../../data";
 
 
-export function Form({ ...rest}): JSX.Element {
-  const [pcd, setPcd] = useState('');
-  
+export function Form({ ...rest}): JSX.Element {  
+  const isShortScreen = useBreakpointValue({
+    base: true,
+    sm: false,
+  })
+
   return (
-    <form style={{...rest, width: '80%', margin: '0 auto', padding: '10px'}}>
+    <form style={{...rest, width: '100%', margin: '0 auto', padding: '10px'}}>
       <FormControl
         as="fieldset"
         display="flex"
         flexDirection="column"
+        maxW="900px"
+        m="0 auto"
         p="10px"
         border="1px"
         borderColor="#ccccccab"
@@ -27,30 +32,15 @@ export function Form({ ...rest}): JSX.Element {
           Ficha de Inscrição
         </FormLabel>
 
-        <Grid templateColumns="repeat(2, 1fr)" gap="10px">
+        <Grid templateColumns={isShortScreen ? '1fr' : '1fr 1fr'} gap="10px">
           <Input label="Nome do Candidato:" />
           <Input label="Instituição de Ensino:" />
-
-          <RadioGroup label="Período em que está matriculado:" labelBottom options={[
-            { label: '1', value: '1' },
-            { label: '2', value: '2' },
-            { label: '3', value: '3' },
-            { label: '4', value: '4' },
-            { label: '5', value: '5' },
-            { label: '6', value: '6' },
-            { label: '7', value: '7' },
-            { label: '8', value: '8' },
-            { label: '9', value: '9' }
-          ]} />
-
           <Input label="Endereço:" />
-          <Input label="Telefone:" />
+          <Input label="Telefone:" maxW="200px" />
           <Input label="E-mail:" type="email" />
 
-          <RadioGroup w="150px" label="PCD:" options={[
-            { label: 'Sim', value: 'sim' },
-            { label: 'Não', value: 'nao' },
-          ]} />
+          <RadioGroup label="Período em que está matriculado:" options={periodOptions} labelBottom />
+          <RadioGroup label="PCD:" options={pcdOptions} w="150px" />
         </Grid>
         
         <Box m="20px 0">

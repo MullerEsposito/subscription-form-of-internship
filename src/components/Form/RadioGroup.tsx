@@ -30,7 +30,6 @@ export function RadioGroup({ label, labelBottom=false, options, ...rest }: Radio
               display="flex"
               flexDirection="column"
               justifyContent="center"
-              m="0"
             >
             {label}
           </Radio>
