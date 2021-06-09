@@ -21,7 +21,13 @@ export function InputFile({ label }: InputFileProps): JSX.Element {
         {label}
         
         <Text m="5px 20px">
-          <Icon as={BiUpload} _hover={{ cursor: 'pointer'}} mr="5px" onClick={onClickUpload} />
+          <Icon
+            as={BiUpload}
+            transition="color 0.6s"
+            _hover={{ cursor: 'pointer', color: 'green.300'}}
+            mr="5px"
+            onClick={onClickUpload} 
+          />
           <span id="file-selected">
             { input || 'carregar arquivo' }
           </span>
