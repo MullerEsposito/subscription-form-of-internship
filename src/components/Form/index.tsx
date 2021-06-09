@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { 
-  FormControl, FormLabel, Stack, RadioGroup, Radio, Grid, Box, Button
+  FormControl, FormLabel, Stack, Radio, Grid, Box, Button
 } from "@chakra-ui/react";
 
 
 import { InputFile } from "./InputFile";
 import { Input } from "./Input";
+import { RadioGroup } from "./RadioGroup";
 
 
 export function Form({ ...rest}): JSX.Element {
@@ -20,6 +21,7 @@ export function Form({ ...rest}): JSX.Element {
         p="10px"
         border="1px"
         borderColor="#ccccccab"
+        bg="white"
       >
         <FormLabel as="legend" textAlign="center" fontSize="1.5rem">
           Ficha de Inscrição
@@ -28,21 +30,30 @@ export function Form({ ...rest}): JSX.Element {
         <Grid templateColumns="repeat(2, 1fr)" gap="10px">
           <Input label="Nome do Candidato:" />
           <Input label="Instituição de Ensino:" />
-          <Input label="Período em que está matriculado:" type="number" min="1" max="9" />
+
+          <RadioGroup label="Período em que está matriculado:" labelBottom options={[
+            { label: '1', value: '1' },
+            { label: '2', value: '2' },
+            { label: '3', value: '3' },
+            { label: '4', value: '4' },
+            { label: '5', value: '5' },
+            { label: '6', value: '6' },
+            { label: '7', value: '7' },
+            { label: '8', value: '8' },
+            { label: '9', value: '9' }
+          ]} />
+
           <Input label="Endereço:" />
           <Input label="Telefone:" />
           <Input label="E-mail:" type="email" />
 
-          <RadioGroup onChange={setPcd} value={pcd}>
-            <FormLabel>PCD:</FormLabel>
-            <Stack direction="row">
-              <Radio value="1">Sim</Radio>
-              <Radio value="2">Não</Radio>
-            </Stack>
-          </RadioGroup>
+          <RadioGroup w="150px" label="PCD:" options={[
+            { label: 'Sim', value: 'sim' },
+            { label: 'Não', value: 'nao' },
+          ]} />
         </Grid>
         
-        <Box mt="10px">
+        <Box m="20px 0">
           <InputFile label="Documento de Identificação:" />
           <InputFile label="Declaração da instituição de ensino em que está matriculado (a):" />
           <InputFile label="Histórico Escolar:" />

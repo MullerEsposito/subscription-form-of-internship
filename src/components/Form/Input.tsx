@@ -8,7 +8,7 @@ export function Input({ label, ...rest }: InputProps): JSX.Element {
   return (
     <FormControl>
       <FormLabel>{label}</FormLabel>
-      <ChakraInput {...rest} />
+      <ChakraInput {...rest} borderColor="gray.400" />
     </FormControl>
   )
 }
