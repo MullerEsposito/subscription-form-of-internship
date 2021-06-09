@@ -23,6 +23,9 @@ export const theme = extendTheme({
       p: {
         margin: 0,
         lineHeight: '1rem'
+      },
+      form: {
+        color: 'rgb(112, 112, 112)'
       }
     }
   }
