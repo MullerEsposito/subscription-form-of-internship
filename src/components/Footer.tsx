@@ -1,4 +1,5 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Icon, Link, Text } from "@chakra-ui/react";
+import { ImWhatsapp } from "react-icons/im";
 
 export function Footer(): JSX.Element {
   return (
@@ -14,11 +15,18 @@ export function Footer(): JSX.Element {
         </address>
 
         <Box ml='auto' p='10px'>
-          Redes Sociais
+          <Link href="https://api.whatsapp.com/send?phone=5538984171472" isExternal>
+            <Icon 
+              as={ImWhatsapp} 
+              boxSize="2rem" 
+              _hover={{ boxSize: '2.2rem' }}
+              transition="all 0.8s"
+            />
+          </Link>
         </Box>
 
       </Flex>
-      <Flex alignItems="center" justifyContent="center" flex={1}>
+      <Flex alignItems="center" justifyContent="center" flex={1} pt="20px">
         <Text>© Tribunal Regional Federal da 1ª Região - 2020</Text>
       </Flex>
     </Flex>
