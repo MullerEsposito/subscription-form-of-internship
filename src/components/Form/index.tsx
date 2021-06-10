@@ -33,7 +33,7 @@ export function Form({ ...rest}): JSX.Element {
           Ficha de Inscrição
         </FormLabel>
 
-          <InputPhoto />
+        <InputPhoto />
         <Grid templateColumns={isShortScreen ? '1fr' : '1fr 1fr'} gap="10px">
           <Input label="Nome do Candidato:" />
           <Input label="Instituição de Ensino:" />
