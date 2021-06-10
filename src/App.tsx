@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box, Flex } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -11,7 +10,6 @@ function App(): JSX.Element {
       <Header title="Seleção de Estágio 2021" />
 
       <Form flex={1} />
-      {/* <form style={{ flex: 1 }} /> */}
       
       <Footer />
     </Flex>
