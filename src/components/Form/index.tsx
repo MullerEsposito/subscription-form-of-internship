@@ -7,6 +7,7 @@ import { InputFile } from "./InputFile";
 import { Input } from "./Input";
 import { RadioGroup } from "./RadioGroup";
 import { pcdOptions, periodOptions } from "../../data";
+import { InputPhoto } from "./InputPhoto";
 
 
 export function Form({ ...rest}): JSX.Element {  
@@ -32,12 +33,13 @@ export function Form({ ...rest}): JSX.Element {
           Ficha de Inscrição
         </FormLabel>
 
+          <InputPhoto />
         <Grid templateColumns={isShortScreen ? '1fr' : '1fr 1fr'} gap="10px">
           <Input label="Nome do Candidato:" />
           <Input label="Instituição de Ensino:" />
           <Input label="Endereço:" />
-          <Input label="Telefone:" maxW="200px" />
           <Input label="E-mail:" type="email" />
+          <Input label="Telefone:" maxW="200px" type="tel" />
 
           <RadioGroup label="Período em que está matriculado:" options={periodOptions} labelBottom />
           <RadioGroup label="PCD:" options={pcdOptions} w="150px" />
