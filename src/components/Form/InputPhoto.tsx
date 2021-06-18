@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { FormControl, Input, Text, Icon, Box } from "@chakra-ui/react";
+import { FormControl, Input, Icon, Box } from "@chakra-ui/react";
 import { BsPersonSquare } from "react-icons/bs";
 
 export function InputPhoto() {

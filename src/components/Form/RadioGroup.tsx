@@ -1,3 +1,4 @@
+import React from "react";
 import { 
   RadioGroup as ChakraRadioGroup, FormLabel, Stack, Radio, RadioGroupProps as ChakraRadioGroupProps
 } from '@chakra-ui/react'
@@ -14,7 +15,8 @@ interface RadioGroupProps extends Omit<ChakraRadioGroupProps, 'children'> {
   options: Option[];
 }
 
-export function RadioGroup({ label, labelBottom=false, options, ...rest }: RadioGroupProps) {
+const RadioGroup: React.ForwardRefRenderFunction<HTMLInputElement, RadioGroupProps> = 
+({ label, labelBottom=false, options, ...rest }, ref) => {
   const [pcd, setPcd] = useState('');
 
   return (
@@ -30,11 +32,12 @@ export function RadioGroup({ label, labelBottom=false, options, ...rest }: Radio
               display="flex"
               flexDirection="column"
               justifyContent="center"
+              ref={ref}
             >
             {label}
           </Radio>
           ):(
-            <Radio key={value} value={value} borderColor="gray.400">
+            <Radio key={value} value={value} borderColor="gray.400" ref={ref}>
               {label}
             </Radio>
           );
@@ -43,3 +46,5 @@ export function RadioGroup({ label, labelBottom=false, options, ...rest }: Radio
     </ChakraRadioGroup>
   )
 }
+
+export default React.forwardRef(RadioGroup);

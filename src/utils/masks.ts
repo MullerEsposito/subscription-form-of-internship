@@ -1,5 +1,4 @@
 export const maskNumberToPhone = (number: string) => {
-  console.log(`text: ${number} length: ${number.length}`);
 
   switch (number.length) {
     case 1: 
