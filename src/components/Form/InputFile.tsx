@@ -1,18 +1,22 @@
-import { FormControl, FormLabel, Text, Icon, Input} from '@chakra-ui/react'
-import { useRef, useState } from 'react'
+import React from "react";
+
+import { 
+  FormControl, Text, Icon, Input as ChakraInput, InputProps as ChakraInputProps 
+} from '@chakra-ui/react'
+import { useState } from 'react'
 import { BiUpload } from 'react-icons/bi';
 
-interface InputFileProps {
+interface InputFileProps extends ChakraInputProps {
   label: string;
 }
-
-export function InputFile({ label }: InputFileProps): JSX.Element {
-  const [input, setInput] = useState('');
-
-  const inputRef = useRef<HTMLInputElement>(null);
+const Input: React.ForwardRefRenderFunction<HTMLInputElement, InputFileProps> = 
+({ label, onChange=()=>{}, ...rest }, ref): JSX.Element => {
+  const [input, setInput] = useState<File | null>(null);
+  const inputId = `input${Math.random() * 100}`;
 
   const onClickUpload = () => {
-    inputRef.current?.click();
+    const inputFile = document.getElementById(inputId);
+    inputFile?.click();
   }
 
   return (
@@ -29,20 +33,27 @@ export function InputFile({ label }: InputFileProps): JSX.Element {
             onClick={onClickUpload} 
           />
           <span id="file-selected">
-            { input || 'carregar arquivo' }
+            { input?.name || 'carregar arquivo' }
           </span>
         </Text>
       </label>
-      <Input
-        ref={inputRef}
+      <ChakraInput
+        id={inputId}
+        ref={ref}
         accept="application/pdf, image/png, image/jpeg"
         type="file"
         border="none"
         w="auto"
         position="absolute"
         left="-99999rem" 
-        onChange={e => setInput(e.target.value)}
+        {...rest}
+        onChange={e => {
+          setInput(e.target.files ? e.target.files[0] : null);
+          onChange(e);
+        }}
       />
     </FormControl>
   )
 }
+
+export const InputFile = React.forwardRef(Input);
