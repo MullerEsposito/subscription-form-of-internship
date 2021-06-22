@@ -6,11 +6,10 @@ export function Footer(): JSX.Element {
     <Flex direction="column" bg="green.800" h="166px" p="10px">
       <Flex w="100%" alignItems="center">
         <address>
-          <p>Edifício Sede</p>
-          <p>Av. Álvares Cabral, 1805 - Bairro Santo Agostinho</p>
-          <p>CEP: 30170-001</p>
-          <p>Belo Horizonte/MG</p>
-          <p>Telefone: (31) 3501-1300</p>
+          <p>Av. Deputado Esteves Rodrigues, Nº 852 - Centro</p>
+          <p>CEP: 39400-215</p>
+          <p>Montes Claros/MG</p>
+          <p>Telefone: (38) 2101-8200</p>
           <p>CNPJ: 05.452.786/0001-00</p>        
         </address>
 
@@ -27,7 +26,7 @@ export function Footer(): JSX.Element {
 
       </Flex>
       <Flex alignItems="center" justifyContent="center" flex={1} pt="20px">
-        <Text>© Tribunal Regional Federal da 1ª Região - 2020</Text>
+        <Text>© Tribunal Regional Federal da 1ª Região - 2021</Text>
       </Flex>
     </Flex>
   )
