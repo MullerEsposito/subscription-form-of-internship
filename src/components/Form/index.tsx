@@ -5,9 +5,9 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import InputMask from "react-input-mask";
 
 
-import InputFile from "./InputFile";
-import Input from "./Input";
-import RadioGroup from "./RadioGroup";
+import { InputFile } from "./InputFile";
+import { Input } from "./Input";
+import { RadioGroup } from "./RadioGroup";
 import { pcdOptions, periodOptions } from "../../data";
 import { InputPhoto } from "./InputPhoto";
 
@@ -17,6 +17,7 @@ type Inputs = {
   address: string;
   email: string;
   phone: string;
+  photo: string;
   periodo: string;
   pcd: string;
   identity: string;
@@ -25,8 +26,6 @@ type Inputs = {
   criminalRecordDeclaration: string;
   voluntaryServiceDeclaration: string;
 }
-
-
 export function Form({ ...rest}): JSX.Element {
   const { register, handleSubmit, control } = useForm<Inputs>();
   const isShortScreen = useBreakpointValue({
@@ -58,7 +57,7 @@ export function Form({ ...rest}): JSX.Element {
           Ficha de Inscrição
         </FormLabel>
 
-        <InputPhoto />
+        <InputPhoto {...register("photo")} />
         <Grid templateColumns={isShortScreen ? '1fr' : '1fr 1fr'} gap="10px">
           <Input label="Nome do Candidato:" {...register("candidateName")} />
           <Input label="Instituição de Ensino:" {...register("collegeName")} />

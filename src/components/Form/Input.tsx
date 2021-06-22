@@ -5,7 +5,7 @@ interface InputProps extends ChakraInputProps {
   label: string;  
 }
 
-const Input: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = 
+const InputRef: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = 
 ({label, ...rest}, ref) => {
   return (
     <FormControl
@@ -19,4 +19,4 @@ const Input: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> =
   )
 }
 
-export default React.forwardRef(Input);
+export const Input = React.forwardRef(InputRef);

@@ -1,25 +1,22 @@
 import React from "react";
 
-import { FormControl, FormLabel, Text, Icon, Input, InputProps as ChakraInputProps } from '@chakra-ui/react'
-import { useRef, useState } from 'react'
+import { 
+  FormControl, Text, Icon, Input as ChakraInput, InputProps as ChakraInputProps 
+} from '@chakra-ui/react'
+import { useState } from 'react'
 import { BiUpload } from 'react-icons/bi';
-import { useEffect } from "react";
 
 interface InputFileProps extends ChakraInputProps {
   label: string;
 }
-
-const InputFile: React.ForwardRefRenderFunction<HTMLInputElement, InputFileProps> = 
-({ label, ...rest }, ref): JSX.Element => {
-  const [input, setInput] = useState('');
+const Input: React.ForwardRefRenderFunction<HTMLInputElement, InputFileProps> = 
+({ label, onChange=()=>{}, ...rest }, ref): JSX.Element => {
+  const [input, setInput] = useState<File | null>(null);
   const inputId = `input${Math.random() * 100}`;
-
-  // const inputRef = useRef<HTMLInputElement>(null);
 
   const onClickUpload = () => {
     const inputFile = document.getElementById(inputId);
     inputFile?.click();
-    // inputRef.current?.click();
   }
 
   return (
@@ -36,11 +33,11 @@ const InputFile: React.ForwardRefRenderFunction<HTMLInputElement, InputFileProps
             onClick={onClickUpload} 
           />
           <span id="file-selected">
-            { input || 'carregar arquivo' }
+            { input?.name || 'carregar arquivo' }
           </span>
         </Text>
       </label>
-      <Input
+      <ChakraInput
         id={inputId}
         ref={ref}
         accept="application/pdf, image/png, image/jpeg"
@@ -51,12 +48,12 @@ const InputFile: React.ForwardRefRenderFunction<HTMLInputElement, InputFileProps
         left="-99999rem" 
         {...rest}
         onChange={e => {
-          console.log('inputfile...');
-          setInput(e.target.value)
-        } }
+          setInput(e.target.files ? e.target.files[0] : null);
+          onChange(e);
+        }}
       />
     </FormControl>
   )
 }
 
-export default React.forwardRef(InputFile);
+export const InputFile = React.forwardRef(Input);
