@@ -1,48 +1,65 @@
-import React from "react";
-import { useState } from "react";
-import { FormControl, Input as ChakraInput, InputProps as ChakraInputProps, Icon, Box, Image } from "@chakra-ui/react";
+import React from 'react';
+import { useRef } from "react";
+import { FormControl, Input as ChakraInput, InputProps as ChakraInputProps, Icon, Box, Image, Tooltip } from "@chakra-ui/react";
 import { BsPersonSquare } from "react-icons/bs";
+import { useState } from 'react';
 
-const Input: React.ForwardRefRenderFunction<HTMLInputElement, ChakraInputProps> = 
-({ onChange=()=>{}, ...rest }, ref) => {
-  const [input, setInput] = useState<File | null>(null);
+interface InputPhotoProps extends ChakraInputProps {
+  photo: File | null;
+  msgValidation?: string;
+  setPhoto: (file: File) => void;
+}
 
-  const onClickUpload = () => {
-    const inputPhoto = document.getElementById("inputPhoto");
-    inputPhoto?.click();
+export const InputPhoto = React.memo(({ msgValidation='', photo, setPhoto, ...rest }: InputPhotoProps): JSX.Element => {
+  const [errorMessage, setErrorMessage] = useState('');
+  const inputPhoto = useRef<HTMLInputElement>(null);
+
+  const validation = () => {
+    const { current: input } = inputPhoto;
+    if (input) {
+      if (input.validity.valueMissing) {
+        input.setCustomValidity(msgValidation);
+        setErrorMessage(msgValidation)
+      } else {
+        input.setCustomValidity('');
+        setErrorMessage('');
+      }
+    }
   }
 
   return(
     <FormControl position="relative" display="flex" justifyContent="center" mb="20px">
-      <Box 
-        w="100px" 
-        h="100px" 
-        onClick={onClickUpload}
-        transition="color 0.6s"
-        _hover={{ cursor: 'pointer', color: 'green.300'}}
-      > 
-        {input ? (
-          <Image src={URL.createObjectURL(input)} />
-        ):(
-          <Icon as={BsPersonSquare} boxSize="100px" />
-        )}
-      </Box>
+      <Tooltip label={errorMessage} isOpen={!!errorMessage} placement="bottom" bg="yellow.800" hasArrow>
+        <Box 
+          w="100px" 
+          h="100px" 
+          onClick={() => inputPhoto.current?.click()}
+          transition="color 0.6s"
+          _hover={{ cursor: 'pointer', color: 'green.300'}}
+        > 
+          {photo ? (
+            <Image src={URL.createObjectURL(photo)} />
+          ):(
+            <Icon as={BsPersonSquare} boxSize="100px" />
+          )}
+        </Box>
+      </Tooltip>
 
       <ChakraInput
-        id="inputPhoto"
-        ref={ref}
+        {...rest}
+        ref={inputPhoto}
         accept="application/pdf, image/png, image/jpeg"
         type="file"
         position="absolute"
         left="-99999rem" 
         onChange={e => {
-          setInput(e.target.files ? e.target.files[0] : null);
-          onChange(e);
+          e.target.files && setPhoto(e.target.files[0]);
+          setErrorMessage('');
         }}
-        {...rest}
+        onInvalid={validation}
       />
     </FormControl>
   )
-}
+});
 
-export const InputPhoto = React.forwardRef(Input);
+InputPhoto.displayName = 'InputPhoto';

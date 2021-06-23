@@ -1,28 +1,38 @@
-import React from "react";
-
+import React, { useState } from 'react';
 import { 
-  FormControl, Text, Icon, Input as ChakraInput, InputProps as ChakraInputProps 
+  FormControl, Text, Icon, Tooltip, Input as ChakraInput, InputProps as ChakraInputProps 
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useRef } from 'react';
 import { BiUpload } from 'react-icons/bi';
 
 interface InputFileProps extends ChakraInputProps {
-  label: string;
+  file: File | null;
+  msgValidation?: string;
+  children: string;
+  setFile: (value: File) => void;
 }
-const Input: React.ForwardRefRenderFunction<HTMLInputElement, InputFileProps> = 
-({ label, onChange=()=>{}, ...rest }, ref): JSX.Element => {
-  const [input, setInput] = useState<File | null>(null);
-  const inputId = `input${Math.random() * 100}`;
 
-  const onClickUpload = () => {
-    const inputFile = document.getElementById(inputId);
-    inputFile?.click();
+export const InputFile = React.memo(({ file, msgValidation='', children, setFile, ...rest }: InputFileProps): JSX.Element => {
+  const [errorMessage, setErrorMessage] = useState('');
+  const inputFile = useRef<HTMLInputElement>(null);
+
+  const validation = () => {
+    const { current: input } = inputFile;
+    if (input) {
+      if (input.validity.valueMissing) {
+        input.setCustomValidity(msgValidation);
+        setErrorMessage(msgValidation)
+      } else {
+        input.setCustomValidity('');
+        setErrorMessage('');
+      }
+    }
   }
-
+  
   return (
     <FormControl position="relative">
       <label>
-        {label}
+        { children }
         
         <Text m="5px 20px">
           <Icon
@@ -30,30 +40,32 @@ const Input: React.ForwardRefRenderFunction<HTMLInputElement, InputFileProps> =
             transition="color 0.6s"
             _hover={{ cursor: 'pointer', color: 'green.300'}}
             mr="5px"
-            onClick={onClickUpload} 
+            onClick={() => inputFile.current?.click()} 
           />
-          <span id="file-selected">
-            { input?.name || 'carregar arquivo' }
-          </span>
+          <Tooltip label={errorMessage} isOpen={!!errorMessage} placement="right" bg="yellow.800" hasArrow>
+            <span className="fileSelectedName">
+              { file?.name || 'carregar arquivo' }
+            </span>
+          </Tooltip>
         </Text>
       </label>
       <ChakraInput
-        id={inputId}
-        ref={ref}
+        {...rest}
+        ref={inputFile}
         accept="application/pdf, image/png, image/jpeg"
         type="file"
         border="none"
         w="auto"
         position="absolute"
         left="-99999rem" 
-        {...rest}
         onChange={e => {
-          setInput(e.target.files ? e.target.files[0] : null);
-          onChange(e);
+          e.target.files && setFile(e.target.files[0]);
+          setErrorMessage('');
         }}
+        onInvalid={validation}
       />
     </FormControl>
   )
-}
+});
 
-export const InputFile = React.forwardRef(Input);
+InputFile.displayName = "InputFile";
