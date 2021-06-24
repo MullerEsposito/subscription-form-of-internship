@@ -5,7 +5,7 @@ import { BsPersonSquare } from "react-icons/bs";
 import { useState } from 'react';
 
 interface InputPhotoProps extends ChakraInputProps {
-  photo: File | null;
+  photo: File;
   msgValidation?: string;
   setPhoto: (file: File) => void;
 }
@@ -37,7 +37,7 @@ export const InputPhoto = React.memo(({ msgValidation='', photo, setPhoto, ...re
           transition="color 0.6s"
           _hover={{ cursor: 'pointer', color: 'green.300'}}
         > 
-          {photo ? (
+          {photo.name ? (
             <Image src={URL.createObjectURL(photo)} />
           ):(
             <Icon as={BsPersonSquare} boxSize="100px" />

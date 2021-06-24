@@ -6,7 +6,7 @@ import { useRef } from 'react';
 import { BiUpload } from 'react-icons/bi';
 
 interface InputFileProps extends ChakraInputProps {
-  file: File | null;
+  file: File;
   msgValidation?: string;
   children: string;
   setFile: (value: File) => void;
