@@ -1,33 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   FormControl, Text, Icon, Tooltip, Input as ChakraInput, InputProps as ChakraInputProps 
 } from '@chakra-ui/react'
 import { useRef } from 'react';
 import { BiUpload } from 'react-icons/bi';
+import { FieldError, useController } from 'react-hook-form';
 
 interface InputFileProps extends ChakraInputProps {
-  file: File;
-  msgValidation?: string;
+  name: string;
+  control: any;
+  error?: FieldError;
   children: string;
-  setFile: (value: File) => void;
 }
 
-export const InputFile = React.memo(({ file, msgValidation='', children, setFile, ...rest }: InputFileProps): JSX.Element => {
-  const [errorMessage, setErrorMessage] = useState('');
+export const InputFile = React.memo(({ name, error, control, children, ...rest }: InputFileProps): JSX.Element => {
   const inputFile = useRef<HTMLInputElement>(null);
+  const [isOpen, setIsOpen] = useState(!!error);
 
-  const validation = () => {
-    const { current: input } = inputFile;
-    if (input) {
-      if (input.validity.valueMissing) {
-        input.setCustomValidity(msgValidation);
-        setErrorMessage(msgValidation)
-      } else {
-        input.setCustomValidity('');
-        setErrorMessage('');
-      }
-    }
-  }
+  const { field } = useController({ control, name });
+
+  useEffect(() => {
+    setIsOpen(!!error);
+    setTimeout(() => setIsOpen(false), 3000);
+  }, [error]);
   
   return (
     <FormControl position="relative">
@@ -42,9 +37,12 @@ export const InputFile = React.memo(({ file, msgValidation='', children, setFile
             mr="5px"
             onClick={() => inputFile.current?.click()} 
           />
-          <Tooltip label={errorMessage} isOpen={!!errorMessage} placement="right" bg="yellow.800" hasArrow>
+          <Tooltip label={error?.message} isOpen={isOpen} placement="right" bg="yellow.800" hasArrow>
             <span className="fileSelectedName">
-              { file?.name || 'carregar arquivo' }
+              { inputFile.current?.files?.length 
+                  ? inputFile.current?.files[0].name 
+                  : 'carregar arquivo' 
+              }
             </span>
           </Tooltip>
         </Text>
@@ -58,11 +56,7 @@ export const InputFile = React.memo(({ file, msgValidation='', children, setFile
         w="auto"
         position="absolute"
         left="-99999rem" 
-        onChange={e => {
-          e.target.files && setFile(e.target.files[0]);
-          setErrorMessage('');
-        }}
-        onInvalid={validation}
+        onChange={e => field.onChange(e.target.files) }
       />
     </FormControl>
   )

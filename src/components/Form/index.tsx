@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { 
   FormControl, FormLabel, Grid, Box, Button, useBreakpointValue, useDisclosure, Text,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody
 } from "@chakra-ui/react";
+import { yupResolver } from "@hookform/resolvers/yup";
+import InputMask from 'react-input-mask';
 
 import { InputFile } from "./InputFile";
 import { Input } from "./Input";
@@ -11,95 +13,85 @@ import { InputPhoto } from "./InputPhoto";
 
 import { pcdOptions, periodOptions } from "../../data"; 
 import { api } from "../../services/api";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { defaultValues, schema, SubscriptionInputs } from "./config";
+
 
 export function Form({ ...rest}: React.CSSProperties): JSX.Element {
-  const [photo, setPhoto] = useState<File>({} as File);
-  const [candidateName, setCandidateName] =  useState('');
-  const [collegeName, setCollegeName] = useState('');
-  const [address, setAddress] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [period, setPeriod] = useState('');
-  const [pcd, setPcd] = useState('');
-  const [identity, setIdentity] = useState<File>({} as File);
-  const [collegeRegistrationDeclaration, setCollegeRegistrationDeclaration] = useState<File>({} as File);
-  const [schoolRecords, setSchoolRecords] = useState<File>({} as File);
-  const [criminalRecordDeclaration, setCriminalRecordDeclaration] = useState<File>({} as File);
-  const [voluntaryServiceDeclaration, setVoluntaryServiceDeclaration] = useState<File>({} as File);
-
+  const { 
+    register, 
+    control, 
+    reset, 
+    handleSubmit, 
+    formState: { isSubmitSuccessful, errors } 
+  } = useForm<SubscriptionInputs>({
+    resolver: yupResolver(schema)
+  });
+  const [subscriptionNumber, setSubscriptionNumber] = useState(null);
+  const [submittedData, setSubmittedData] = useState({});
+  const [errorMessage, setErrorMessage] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const isShortScreen = useBreakpointValue({
     base: true,
     sm: false,
   });
 
-  const resetForm = (): void => {
-    setCandidateName('');
-    setCollegeName('');
-    setAddress('');
-    setEmail('');
-    setPhone('');
-    setPeriod('');
-    setPcd('');
-    setPhoto({} as File);
-    setIdentity({} as File);
-    setCollegeRegistrationDeclaration({} as File);
-    setSchoolRecords({} as File);
-    setCriminalRecordDeclaration({} as File);
-    setVoluntaryServiceDeclaration({} as File);
-  }
-
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('candidateName', candidateName);
-    formData.append('collegeName', collegeName);
-    formData.append('address', address);
-    formData.append('email', email);
-    formData.append('phone', phone);
-    formData.append('period', period);
-    formData.append('pcd', pcd);
-    formData.append('documents[]', photo, 'doc-foto')
-    formData.append('documents[]', identity, 'doc-identificação');
-    formData.append('documents[]', collegeRegistrationDeclaration, 'doc-declaraçãoDeMatricula');
-    formData.append('documents[]', schoolRecords, 'doc-historicoEscolar');
-    formData.append('documents[]', criminalRecordDeclaration, 'doc-declaraçãoAntecedentesCriminais');
-    voluntaryServiceDeclaration?.name && (
-      formData.append('documents[]', voluntaryServiceDeclaration, 'doc-declaraçãoServiçoVoluntario')
-    )
-
-    const status = await api.post('/subscription', formData).then(res => res.status);
-
-    if (status === 200) {
-      resetForm();
-      onOpen();
+  useEffect(() => {
+    if (isSubmitSuccessful) {      
+      reset({ ...defaultValues });
     }
+  }, [reset, isSubmitSuccessful, submittedData]);
+
+  const onSubmit: SubmitHandler<SubscriptionInputs> = async (data) => {
+    console.log(data);
+    setSubmittedData(data);
+    try {
+      const { data: { id } } = await api.post('/subscriptions', data).then(res => res);
+
+      setSubscriptionNumber(id);
+    } catch (err) {
+      switch (err.response.data.error) {
+        case "CPF already registered!":
+          setErrorMessage("Já existe uma inscrição feita com este CPF!");
+          break;
+        default: 
+          setErrorMessage(err.response.data.error);
+      }
+    }
+    onOpen();
   }
 
   const renderRadiosGroup = (): JSX.Element => {
     return (
       <>
-        <RadioGroup
+        <Controller 
+          control={control}
           name="period"
-          value={period}
-          setValue={setPeriod}
-          options={periodOptions} 
-          labelBottom
-          isRequired
-        >
-            Período em que está matriculado:
-        </RadioGroup>
-        <RadioGroup
+          render={({ field }) => (
+            <RadioGroup
+              options={periodOptions}
+              error={errors.period}
+              labelBottom
+              {...field}
+            >
+              Período em que está matriculado:
+            </RadioGroup>
+          )}
+        />
+        <Controller 
+          control={control}
           name="pcd"
-          value={pcd}
-          setValue={setPcd}
-          options={pcdOptions} 
-          isRequired
-          w="150px" 
-        >
-          PCD:
-        </RadioGroup>
+          render={({ field  }) => (
+            <RadioGroup
+              options={pcdOptions} 
+              error={errors.pcd}
+              w="150px" 
+              {...field}
+            >
+              PCD:
+            </RadioGroup>            
+          )}
+        />
       </>
     );
   }
@@ -108,38 +100,38 @@ export function Form({ ...rest}: React.CSSProperties): JSX.Element {
     return (
       <Box m="20px 0">
           <InputFile
-            file={identity}
-            setFile={setIdentity}
-            isRequired
-            msgValidation="O documento de identificação é obrigatório!"
+            name="documents.identity"
+            control={control}
+            error={errors.documents?.identity}
           >
             Documento de Identificação:
           </InputFile>
           <InputFile
-            file={collegeRegistrationDeclaration}
-            setFile={setCollegeRegistrationDeclaration}
-            isRequired
-            msgValidation="Esta declaração é obrigatório!"
+            name="documents.collegeRegistrationDeclaration"
+            control={control}
+            error={errors.documents?.collegeRegistrationDeclaration}
           >
             Declaração da instituição de ensino em que está matriculado (a):
           </InputFile>
           <InputFile
-            file={schoolRecords}
-            setFile={setSchoolRecords}
-            isRequired
-            msgValidation="O histórico escolar é obrigatório!"
+            name="documents.schoolRecords"
+            control={control}
+            error={errors.documents?.schoolRecords}
           >
             Histórico Escolar:
           </InputFile>
           <InputFile
-            file={criminalRecordDeclaration}
-            setFile={setCriminalRecordDeclaration}
-            isRequired
-            msgValidation="Este atestado é obrigatório!"
+            name="documents.criminalRecordDeclaration"
+            control={control}
+            error={errors.documents?.criminalRecordDeclaration}
           >
             Atestado de Antecedentes Criminais:
           </InputFile>
-          <InputFile file={voluntaryServiceDeclaration} setFile={setVoluntaryServiceDeclaration}>
+          <InputFile 
+            name="documents.voluntaryServiceDeclaration"
+            control={control}
+            error={errors.documents?.voluntaryServiceDeclaration}
+          >
             Certidão emitida pela Justiça Federal declarando prestação de serviço voluntário:
           </InputFile>
         </Box>
@@ -149,19 +141,32 @@ export function Form({ ...rest}: React.CSSProperties): JSX.Element {
   const renderInputs = (): JSX.Element => {
     return (
       <>
-        <Input value={candidateName} setValue={setCandidateName} isRequired msgValidation="Nome é obrigatório!">
+        <Input {...register("candidateName")} error={errors.candidateName}>
           Nome do Candidato:
         </Input>
-        <Input value={collegeName} setValue={setCollegeName} isRequired msgValidation="Nome da instituição é obrigatório!">
+        <Input {...register("collegeName")} error={errors.collegeName}>
           Instituição de Ensino:
         </Input>
-        <Input value={address} setValue={setAddress} isRequired msgValidation="Endereço é obrigatório!">
+        <Input {...register("address")} error={errors.address}>
           Endereço:
         </Input>
-        <Input type="email" value={email} setValue={setEmail} isRequired msgValidation="E-mail é obrigatório">
+        <Input 
+          {...register("cpf")} 
+          error={errors.cpf} 
+          as={InputMask}
+          mask="999.999.999-99"
+        >
+          CPF:
+        </Input>
+        <Input {...register("email")} error={errors.email} type="email" >
           E-mail:
         </Input>
-        <Input type="tel" maxW="200px" value={phone} setValue={setPhone} isRequired>
+        <Input 
+          {...register("phone")} 
+          error={errors.phone} 
+          as={InputMask}
+          mask="(99) 99999-9999"
+        >
           Telefone:
         </Input>
       </>
@@ -170,13 +175,29 @@ export function Form({ ...rest}: React.CSSProperties): JSX.Element {
 
   const renderModal = (): JSX.Element => {
     return (
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={() => {
+        setErrorMessage("");
+        onClose();
+      }}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader color="black">Sucesso!</ModalHeader>
-          <ModalCloseButton color="black" />
+        <ModalContent
+          bg={errorMessage ? "red.800" : "white"}
+          color={errorMessage ? "white" : "black"}
+        >
+          <ModalHeader>
+            { errorMessage 
+              ? "Não foi possível realizar a inscrição!"
+              : "Inscrição realizada com sucesso!"
+            }
+          </ModalHeader>
+          <ModalCloseButton />
           <ModalBody>
-            <Text color="black">Inscrição realizada com sucesso!</Text>
+            <Text>
+              { errorMessage
+                ? errorMessage
+                : `O número de sua inscrição é ${subscriptionNumber}`
+              }
+            </Text>
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -185,7 +206,7 @@ export function Form({ ...rest}: React.CSSProperties): JSX.Element {
 
   return (
     <form 
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       style={{...rest, flex: 1, width: '100%', margin: '0 auto', padding: '10px'}}
     >
       <FormControl
@@ -203,7 +224,7 @@ export function Form({ ...rest}: React.CSSProperties): JSX.Element {
           Ficha de Inscrição
         </FormLabel>
 
-        <InputPhoto photo={photo} setPhoto={setPhoto} isRequired msgValidation="A foto é obrigatória!" />
+        <InputPhoto name="documents.photo" control={control} error={errors.documents?.photo} />
         <Grid templateColumns={isShortScreen ? '1fr' : '1fr 1fr'} gap="10px">
           { renderInputs() }
           
@@ -214,6 +235,7 @@ export function Form({ ...rest}: React.CSSProperties): JSX.Element {
 
         <Button 
           type="submit"
+          mt="10px"
           alignSelf="center" 
           bg="green.400" 
           color="white" 

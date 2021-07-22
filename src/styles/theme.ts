@@ -7,7 +7,10 @@ export const theme = extendTheme({
     },
     green: {
       '800': '#426837',
-    }
+    },
+    accepted: "#00c98d",
+    rejected: "#c6001f",
+    pending: "#f5a400",
   },
   fonts: {
       heading: 'Roboto',
