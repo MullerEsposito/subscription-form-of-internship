@@ -46,7 +46,7 @@ export const schema = yup.object().shape({
   cpf: yup.string().required("CPF é obrigatório!").length(14),
   phone: yup.string().required("Telefone é obrigatório!"),
   pcd: yup.string().required("Está opção é obrigatória!"),
-  period: yup.number().required("Por favor, marque o período em que está matriculado!"),
+  period: yup.string().required("Por favor, marque o período em que está matriculado!"),
   documents: yup.object().shape({
     photo: yup.string().required("A foto é obrigatória!"),
     identity: yup.string().required("O documento de identificação é obrigatório!"),

@@ -1,0 +1,76 @@
+{
+  "subscriptions": [
+    {
+      "candidateName": "Müller Esposito Nunes",
+      "collegeName": "UNIFRAN",
+      "address": "Rua Joaquim Rodrigues 286 Casa 13",
+      "email": "mulleresposito@hotmail.com",
+      "phone": "(38) 98417-1472",
+      "period": "3",
+      "pcd": "nao",
+      "cpf": "671.641.103-88",
+      "documents": {
+        "photo": "files/wb05nlfd.jpeg",
+        "identity": "files/wcaba7on.pdf",
+        "collegeRegistrationDeclaration": "files/akjqyszz.pdf",
+        "schoolRecords": "files/qq8euxvp.pdf",
+        "criminalRecordDeclaration": "files/hwlmxuy8.pdf",
+        "voluntaryServiceDeclaration": "files/f82upo4e.pdf"
+      },
+      "homologation": "pending",
+      "message": "Sua inscrição ainda está em análise!",
+      "createdAt": 1627012355172,
+      "updatedAt": 1627025561834,
+      "accessKey": "2gagv",
+      "id": 1
+    },
+    {
+      "candidateName": "Müller Esposito Nunes",
+      "collegeName": "UNIFRAN",
+      "address": "Rua Joaquim Rodrigues 286 Casa 13",
+      "email": "mulleresposito@hotmail.com",
+      "phone": "(38) 98417-1472",
+      "period": "3",
+      "pcd": "nao",
+      "cpf": "671.641.103-87",
+      "documents": {
+        "voluntaryServiceDeclaration": "files/f82upo4e.pdf",
+        "criminalRecordDeclaration": "files/hwlmxuy8.pdf",
+        "schoolRecords": "files/qq8euxvp.pdf",
+        "collegeRegistrationDeclaration": "files/akjqyszz.pdf",
+        "identity": "files/wcaba7on.pdf",
+        "photo": "files/wb05nlfd.jpeg"
+      },
+      "homologation": "accepted",
+      "message": "Sua inscrição foi aceita!",
+      "createdAt": 1627012355172,
+      "updatedAt": null,
+      "accessKey": "s11a9",
+      "id": 2
+    },
+    {
+      "candidateName": "Müller Esposito Nunes",
+      "collegeName": "UNIFRAN",
+      "address": "Rua Joaquim Rodrigues 286 Casa 13",
+      "email": "mulleresposito@hotmail.com",
+      "phone": "(38) 98417-1472",
+      "period": "3",
+      "pcd": "nao",
+      "cpf": "671.641.103-85",
+      "documents": {
+        "voluntaryServiceDeclaration": "files/c9yp0u14.pdf",
+        "criminalRecordDeclaration": "files/0qmduewx.pdf",
+        "schoolRecords": "files/w9986na8.pdf",
+        "collegeRegistrationDeclaration": "files/11l8iyx7.pdf",
+        "identity": "files/37b5xykm.pdf",
+        "photo": "files/iqu9r0hf.jpeg"
+      },
+      "homologation": "pending",
+      "message": "Sua inscrição ainda está em análise!",
+      "createdAt": 1627012411361,
+      "updatedAt": null,
+      "accessKey": "16upj",
+      "id": 3
+    }
+  ]
+}

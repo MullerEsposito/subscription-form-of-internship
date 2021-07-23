@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { 
   FormControl, FormLabel, Grid, Box, Button, useBreakpointValue, useDisclosure, Text,
   Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody
@@ -15,48 +15,52 @@ import { pcdOptions, periodOptions } from "../../data";
 import { api } from "../../services/api";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { defaultValues, schema, SubscriptionInputs } from "./config";
+import { useContext } from "react";
+import { SubscriptionsContext } from "../../context/SubscriptionsContext";
+import { useHistory, useParams } from "react-router-dom";
+
+interface FormProps extends React.CSSProperties {
+  preloadedValues?: SubscriptionInputs;
+}
 
 
-export function Form({ ...rest}: React.CSSProperties): JSX.Element {
+export function Form({ preloadedValues, ...rest}: FormProps): JSX.Element {
+  const [subscriptionNumber, setSubscriptionNumber] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const { id } = useParams() as any;
   const { 
     register, 
     control, 
     reset, 
     handleSubmit, 
-    formState: { isSubmitSuccessful, errors } 
+    formState: { errors } 
   } = useForm<SubscriptionInputs>({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
+    defaultValues: preloadedValues,
   });
-  const [subscriptionNumber, setSubscriptionNumber] = useState(null);
-  const [submittedData, setSubmittedData] = useState({});
-  const [errorMessage, setErrorMessage] = useState("");
+  const { accesskey } = useContext(SubscriptionsContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isShortScreen = useBreakpointValue({
     base: true,
     sm: false,
   });
-
-  useEffect(() => {
-    if (isSubmitSuccessful) {      
-      reset({ ...defaultValues });
-    }
-  }, [reset, isSubmitSuccessful, submittedData]);
+  const history = useHistory();
 
   const onSubmit: SubmitHandler<SubscriptionInputs> = async (data) => {
-    console.log(data);
-    setSubmittedData(data);
     try {
-      const { data: { id } } = await api.post('/subscriptions', data).then(res => res);
-
-      setSubscriptionNumber(id);
-    } catch (err) {
-      switch (err.response.data.error) {
-        case "CPF already registered!":
-          setErrorMessage("Já existe uma inscrição feita com este CPF!");
-          break;
-        default: 
-          setErrorMessage(err.response.data.error);
+      if (!!preloadedValues) {
+        await api.patch(`/subscriptions/${id}`, data, {
+          headers: { accesskey }
+        }).then(res => res);
+      } else {
+        const { data: { id } } = await api.post('/subscriptions', data).then(res => res);
+        setSubscriptionNumber(id);
       }
+
+      reset({ ...defaultValues });
+    } catch (err) {
+      setErrorMessage(err.response.data.error);
+     
     }
     onOpen();
   }
@@ -155,6 +159,7 @@ export function Form({ ...rest}: React.CSSProperties): JSX.Element {
           error={errors.cpf} 
           as={InputMask}
           mask="999.999.999-99"
+          isDisabled={!!preloadedValues?.address}
         >
           CPF:
         </Input>
@@ -177,6 +182,7 @@ export function Form({ ...rest}: React.CSSProperties): JSX.Element {
     return (
       <Modal isOpen={isOpen} onClose={() => {
         setErrorMessage("");
+        if (!!preloadedValues) history.push("/subscriptions/query")
         onClose();
       }}>
         <ModalOverlay />
@@ -195,7 +201,9 @@ export function Form({ ...rest}: React.CSSProperties): JSX.Element {
             <Text>
               { errorMessage
                 ? errorMessage
-                : `O número de sua inscrição é ${subscriptionNumber}`
+                : !!preloadedValues 
+                  ? "Sua ficha de inscrição foi atualizada com sucesso!"
+                  : `O número de sua inscrição é ${subscriptionNumber}`
               }
             </Text>
           </ModalBody>
@@ -241,7 +249,7 @@ export function Form({ ...rest}: React.CSSProperties): JSX.Element {
           color="white" 
           _hover={{ bg: 'green.500' }}
         >
-          Enviar
+          {!!preloadedValues ? "Atualizar" : "Enviar"}
         </Button>
       </FormControl>
       { renderModal() }

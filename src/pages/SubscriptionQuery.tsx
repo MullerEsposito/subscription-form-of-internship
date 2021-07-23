@@ -8,8 +8,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Input } from "../components/Form/Input";
 import { useState } from "react";
 import { api } from "../services/api";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { SubscriptionsContext } from "../context/SubscriptionsContext";
 
 interface SubQueryResponse {
+  id: number;
   status: "accepted" | "rejected" | "pending";
   message: string;
 }
@@ -31,21 +35,26 @@ const schema = yup.object().shape({
 })
 
 export function SubscriptionQuery() {
-  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>({
+  const { register, handleSubmit, setError, formState: { errors } } = useForm<Inputs>({
     resolver: yupResolver(schema)
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [subQueryResponse, setSubQueryResponse] = useState<SubQueryResponse>({} as SubQueryResponse);
+  const { setAccesskey } = useContext(SubscriptionsContext);
 
   const onSubmit: SubmitHandler<Inputs> = async data => {
-    console.log(data);
     try {
-      const { data: response } = await api.get(`/subscriptions/${data.subId}/status`).then(res => res);
+      const { data: response } = await api.get(`/subscriptions/${data.subId}/status`, {
+        headers: { accesskey: data.subPassword }
+      }).then(res => res);
+      
       setSubQueryResponse(response);
-    } catch (error) {
-      console.log(error.message);
+      setAccesskey(data.subPassword);
+      onOpen();
+    } catch ({ response: { data } }) {
+      
+      setError("subPassword", { type: "manual", message: data.error });
     }
-    onOpen();
   }
 
   const renderModal = (): JSX.Element => {
@@ -65,9 +74,11 @@ export function SubscriptionQuery() {
               { subQueryResponse.message }
             </Text>
             { subQueryResponse.status === "rejected" && (
-              <Button size="xs" colorScheme="teal" mt="10px">
-                Corrigir
-              </Button>
+              <Link to={`/subscription/${subQueryResponse.id}`}>
+                <Button size="xs" colorScheme="teal" mt="10px">
+                  Corrigir
+                </Button>
+              </Link>
             )}
           </ModalBody>
         </ModalContent>
