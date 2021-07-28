@@ -1,4 +1,4 @@
-import { Flex, Grid, Icon, Text, VStack, Link as ChakraLink } from "@chakra-ui/react";
+import { Grid, Icon, Text, VStack, Link as ChakraLink } from "@chakra-ui/react";
 import { AiOutlineForm } from "react-icons/ai"
 import { GiArchiveResearch } from "react-icons/gi";
 import { Link } from "react-router-dom";

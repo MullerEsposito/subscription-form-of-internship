@@ -6,6 +6,7 @@
     "@chakra-ui/react": "^1.6.3",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@fnando/cpf": "^1.0.2",
     "@hookform/resolvers": "^2.6.1",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",

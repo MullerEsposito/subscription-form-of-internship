@@ -5,6 +5,7 @@ import {
 } from "@chakra-ui/react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InputMask from 'react-input-mask';
+import { strip } from "@fnando/cpf";
 
 import { InputFile } from "./InputFile";
 import { Input } from "./Input";
@@ -23,9 +24,16 @@ interface FormProps extends React.CSSProperties {
   preloadedValues?: SubscriptionInputs;
 }
 
+interface ISubscriptionResponse {
+  id: number;
+  accesskey: string;
+}
 
 export function Form({ preloadedValues, ...rest}: FormProps): JSX.Element {
-  const [subscriptionNumber, setSubscriptionNumber] = useState(null);
+  const [
+    subscriptionResponse, 
+    setSubscriptionResponse
+  ] = useState<ISubscriptionResponse>({} as ISubscriptionResponse);
   const [errorMessage, setErrorMessage] = useState("");
   const { id } = useParams() as any;
   const { 
@@ -39,7 +47,7 @@ export function Form({ preloadedValues, ...rest}: FormProps): JSX.Element {
     defaultValues: preloadedValues,
   });
   const { accesskey } = useContext(SubscriptionsContext);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen } = useDisclosure();
   const isShortScreen = useBreakpointValue({
     base: true,
     sm: false,
@@ -48,20 +56,43 @@ export function Form({ preloadedValues, ...rest}: FormProps): JSX.Element {
 
   const onSubmit: SubmitHandler<SubscriptionInputs> = async (data) => {
     try {
+      const fd = new FormData();
+      data.cpf = strip(data.cpf);
+      const inputs = data as any;
+
+      for (const key in inputs) {
+        if (inputs.hasOwnProperty(key)) {
+          if (typeof inputs[key] === "object") {
+            const documents = inputs[key];
+            for (const keyNest in documents) {
+              if (!!documents[keyNest]) {
+                fd.append("documents[]", documents[keyNest][0], keyNest)
+              }
+            }
+            continue;
+          }
+          fd.append(key, inputs[key]);
+        }
+      }
+
       if (!!preloadedValues) {
-        await api.patch(`/subscriptions/${id}`, data, {
+        await api.patch(`/subscriptions/${id}`, fd, {
           headers: { accesskey }
         }).then(res => res);
       } else {
-        const { data: { id } } = await api.post('/subscriptions', data).then(res => res);
-        setSubscriptionNumber(id);
+        const { data: { id, accesskey } } = await api.post('/subscriptions', fd, {
+          headers: { "Content-Type": "multipart/form-data" }
+        }).then(res => res);
+        setSubscriptionResponse({ id, accesskey });
       }
 
-      reset({ ...defaultValues });
+      reset({ ...defaultValues });  
     } catch (err) {
-      setErrorMessage(err.response.data.error);
+      console.log("Error on request");
+      setErrorMessage(err.response?.data?.error ?? err.message);
      
     }
+    
     onOpen();
   }
 
@@ -124,13 +155,6 @@ export function Form({ preloadedValues, ...rest}: FormProps): JSX.Element {
           >
             Histórico Escolar:
           </InputFile>
-          <InputFile
-            name="documents.criminalRecordDeclaration"
-            control={control}
-            error={errors.documents?.criminalRecordDeclaration}
-          >
-            Atestado de Antecedentes Criminais:
-          </InputFile>
           <InputFile 
             name="documents.voluntaryServiceDeclaration"
             control={control}
@@ -178,12 +202,27 @@ export function Form({ preloadedValues, ...rest}: FormProps): JSX.Element {
     );
   }
 
+  const renderSubscriptionDoneMessage = (): JSX.Element => {
+    return (
+      <>
+        <Text mb="10px">
+          Vc receberá um e-mail com os seguintes dados para que possa acompanhar o status de sua inscrição:
+        </Text>
+        <Text>
+          Número de inscrição: <strong>{subscriptionResponse.id}</strong>.
+        </Text>
+        <Text>
+          Chave de acesso: <strong>{subscriptionResponse.accesskey}</strong>.
+        </Text>
+      </>
+    )
+  }
+
   const renderModal = (): JSX.Element => {
     return (
       <Modal isOpen={isOpen} onClose={() => {
         setErrorMessage("");
-        if (!!preloadedValues) history.push("/subscriptions/query")
-        onClose();
+        history.push("/subscriptions/query")
       }}>
         <ModalOverlay />
         <ModalContent
@@ -198,14 +237,14 @@ export function Form({ preloadedValues, ...rest}: FormProps): JSX.Element {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Text>
+            
               { errorMessage
                 ? errorMessage
                 : !!preloadedValues 
-                  ? "Sua ficha de inscrição foi atualizada com sucesso!"
-                  : `O número de sua inscrição é ${subscriptionNumber}`
+                  ? <Text>"Sua ficha de inscrição foi atualizada com sucesso!"</Text>
+                  : renderSubscriptionDoneMessage()
               }
-            </Text>
+            
           </ModalBody>
         </ModalContent>
       </Modal>
