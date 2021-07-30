@@ -14,7 +14,7 @@ export function Footer(): JSX.Element {
         </address>
 
         <Box ml='auto' p='10px'>
-          <Link href="https://api.whatsapp.com/send?phone=5538984171472" isExternal>
+          <Link href="https://api.whatsapp.com/send?phone=5538984111334" isExternal>
             <Icon 
               as={ImWhatsapp} 
               boxSize="2rem" 
