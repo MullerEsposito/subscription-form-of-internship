@@ -7,8 +7,8 @@ import {
   RadioGroupProps as ChakraRadioGroupProps,
   Tooltip,
 } from '@chakra-ui/react';
-import { Control, FieldError } from 'react-hook-form';
-import { SubscriptionInputs } from './config';
+import { Control, FieldError } from "react-hook-form";
+import { SubscriptionInputs } from "./config";
 
 type Option = {
   value: string;
