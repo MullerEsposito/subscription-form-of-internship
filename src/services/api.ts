@@ -1,8 +1,6 @@
 import axios from 'axios';
 import "dotenv/config";
 
-const baseURL = process.env.NODE_ENV === "production" 
-  ? "https://api.jfmg-mcl.com"
-  : "http://localhost:3333";
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 export const api = axios.create({ baseURL });
