@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Input } from "../components/Form/Input";
 import { useState } from "react";
 import { api } from "../services/api";
-// import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { SubscriptionsContext } from "../context/SubscriptionsContext";
 
@@ -73,15 +73,17 @@ export function SubscriptionQuery() {
             <Text>
               { subQueryResponse.message }
             </Text>
-            { subQueryResponse.status === "rejected" && (
-              // <Link to={`/subscription/${subQueryResponse.id}`}>
-              //   <Button size="xs" colorScheme="teal" mt="10px">
-              //     Corrigir
-              //   </Button>
-              // </Link>
-              <Text>
+            { subQueryResponse.status === "pending" && (
+              <>
+              <Link to={`/subscription/${subQueryResponse.id}`}>
+                <Button size="xs" colorScheme="teal" mt="10px">
+                  Corrigir
+                </Button>
+              </Link>
+              {/* <Text>
                 Envie os documentos corrigidos para estagio.mcl@trf1.jus.br
-              </Text>
+              </Text> */}
+              </>
             )}
           </ModalBody>
         </ModalContent>

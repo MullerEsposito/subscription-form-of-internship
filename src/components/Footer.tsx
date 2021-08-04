@@ -4,7 +4,7 @@ import { ImWhatsapp } from "react-icons/im";
 export function Footer(): JSX.Element {
   return (
     <Flex direction="column" bg="green.800" h="166px" p="10px">
-      <Flex w="100%" alignItems="center">
+      <Flex w="100%" alignItems="center" lineHeight="1.125rem">
         <address>
           <p>Av. Deputado Esteves Rodrigues, Nº 852 - Centro</p>
           <p>CEP: 39400-215</p>

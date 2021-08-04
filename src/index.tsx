@@ -5,6 +5,7 @@ import { BrowserRouter } from "react-router-dom";
 import App from './App';
 
 import { theme } from "./styles/theme";
+require("dotenv").config();
 
 ReactDOM.render(
   <ChakraProvider theme={theme}>

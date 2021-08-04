@@ -50,7 +50,6 @@ export const InputFile = React.memo(({ name, error, control, children, ...rest }
       <ChakraInput
         {...rest}
         ref={inputFile}
-        accept="application/pdf, image/png, image/jpeg"
         type="file"
         border="none"
         w="auto"

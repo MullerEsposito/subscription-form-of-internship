@@ -2,8 +2,8 @@ import { useState } from "react";
 import { createContext } from "react";
 
 type SubscriptionsContextData = {
-  accesskey?: string;
-  setAccesskey: React.Dispatch<React.SetStateAction<string | undefined>>;
+  accesskey: string;
+  setAccesskey: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const SubscriptionsContext = createContext<SubscriptionsContextData>(
@@ -16,7 +16,7 @@ interface SubscriptionsProviderProps {
 }
 
 export function SubscriptionsProvider({ children }: SubscriptionsProviderProps) {
-  const [accesskey, setAccesskey] = useState<string>();
+  const [accesskey, setAccesskey] = useState<string>("");
   
   return (
     <SubscriptionsContext.Provider value={{ accesskey, setAccesskey }}>

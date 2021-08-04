@@ -3,6 +3,6 @@ import "dotenv/config";
 
 const baseURL = process.env.NODE_ENV === "production" 
   ? "https://api.jfmg-mcl.com"
-  : "http://localhost:3333/api";
+  : "http://localhost:3333";
 
 export const api = axios.create({ baseURL });

@@ -1,6 +1,8 @@
 import * as yup from "yup";
 import * as cpf from "@fnando/cpf";
 
+const _2MB = 2048000;
+
 export const defaultValues = {
   candidateName: "",
   collegeName: "",
@@ -30,15 +32,36 @@ export type SubscriptionInputs = {
   phone: string;
   period: string;
   documents: {
-    photo: FileList;
-    identity: FileList;
-    collegeRegistrationDeclaration: FileList;
-    schoolRecords: FileList;
-    voluntaryServiceDeclaration: FileList;
+    photo?: FileList;
+    identity?: FileList;
+    collegeRegistrationDeclaration?: FileList;
+    schoolRecords?: FileList;
+    voluntaryServiceDeclaration?: FileList;
   }; 
 }
 
-export const schema = yup.object().shape({
+export type ISubscription = {
+  id: number;
+  candidateName: string;
+  collegeName: string;
+  address: string;
+  email: string;
+  cpf: string;
+  pcd: string;
+  phone: string;
+  period: string;
+  status: "accepted" | "rejected" | "pending";
+  accesskey: string;
+  documents: {
+    photo?: FileList;
+    identity?: FileList;
+    collegeRegistrationDeclaration?: FileList;
+    schoolRecords?: FileList;
+    voluntaryServiceDeclaration?: FileList;
+  }; 
+}
+
+const commonShape = {
   candidateName: yup
     .string()
     .required("Nome é obrigatório!")
@@ -58,7 +81,7 @@ export const schema = yup.object().shape({
   cpf: yup
     .string()
     .required("CPF é obrigatório!")
-    .length(14, "Máximo de 14 caracteres!")
+    .max(14, `Máximo de 14 caracteres!`)
     .test("checkCPF", "CPF não é válido!", (value) => {
       if (!value) return true;
       return cpf?.isValid(value);
@@ -66,35 +89,91 @@ export const schema = yup.object().shape({
   phone: yup.string().required("Telefone é obrigatório!"),
   pcd: yup.string().required("Está opção é obrigatória!"),
   period: yup.string().required("Por favor, marque o período em que está matriculado!"),
+}
+
+export const schemaUpdate = yup.object().shape({
+  ...commonShape,
+  identity: yup
+    .mixed()
+    .test("type", "Carregue um arquivo no formato PDF!", (value) => 
+      !value || (value && value[0].type === "application/pdf")
+    )
+    .test("fileSize", "O arquivo deve ter menos que 2MB.", (value) => 
+      !value || value[0].size <= _2MB
+    ),
+  collegeRegistrationDeclaration: yup
+    .mixed()
+    .test("type", "Carregue um arquivo no formato PDF!", (value) => 
+      !value || (value && value[0].type === "application/pdf")
+    )
+    .test("fileSize", "O arquivo deve ter menos que 2MB.", (value) => 
+      !value || value[0].size <= _2MB
+    ),
+  schoolRecords: yup
+    .mixed()
+    .test("type", "Carregue um arquivo no formato PDF!", (value) => 
+      !value || (value && value[0].type === "application/pdf")
+    )
+    .test("fileSize", "O arquivo deve ter menos que 2MB.", (value) => 
+      !value || value[0].size <= _2MB
+    ),
+  voluntaryServiceDeclaration: yup
+    .mixed()
+    .test("type", "Carregue um arquivo no formato PDF!", (value) => 
+      !value || (value && value[0].type === "application/pdf")
+    )
+    .test("fileSize", "O arquivo deve ter menos que 2MB.", (value) => 
+      !value || value[0].size <= _2MB
+    ),
+});
+
+
+export const schema = yup.object().shape({
+  ...commonShape,
   documents: yup.object().shape({
     photo: yup
       .mixed()
       .required("A foto é obrigatória!")
-      .test("type", "Apenas arquivos JPG e PNG são aceitos!", (value) => 
-        !value || (value && ["image/png", "image/jpeg"].includes(value[0].type))
+      .test("type", "Carregue uma foto no formato JPG!", (value) => 
+        !value || (value && value[0].type === "image/jpeg")
+      )
+      .test("fileSize", "O arquivo deve ter menos que 2MB.", (value) =>
+        !value || value[0].size <= _2MB
       ),
     identity: yup
       .mixed()
       .required("O documento de identificação é obrigatório!")
-      .test("type", "Apenas arquivos JPG, PNG e PDF são aceitos!", (value) => 
-        !value || (value && ["application/pdf", "image/png", "image/jpeg"].includes(value[0].type))
+      .test("type", "Carregue um arquivo no formato PDF!", (value) => 
+        !value || (value && value[0].type === "application/pdf")
+      )
+      .test("fileSize", "O arquivo deve ter menos que 2MB.", (value) => 
+        !value || value[0].size <= _2MB
       ),
     collegeRegistrationDeclaration: yup
       .mixed()
       .required("Esta declaração é obrigatória!")
-      .test("type", "Apenas arquivos JPG, PNG e PDF são aceitos!", (value) => 
-        !value || (value && ["application/pdf", "image/png", "image/jpeg"].includes(value[0].type))
+      .test("type", "Carregue um arquivo no formato PDF!", (value) => 
+        !value || (value && value[0].type === "application/pdf")
+      )
+      .test("fileSize", "O arquivo deve ter menos que 2MB.", (value) => 
+        !value || value[0].size <= _2MB
       ),
     schoolRecords: yup
       .mixed()
       .required("Esta declaração é obrigatória!")
-      .test("type", "Apenas arquivos JPG, PNG e PDF são aceitos!", (value) => 
-        !value || (value && ["application/pdf", "image/png", "image/jpeg"].includes(value[0].type))
+      .test("type", "Carregue um arquivo no formato PDF!", (value) => 
+        !value || (value && value[0].type === "application/pdf")
+      )
+      .test("fileSize", "O arquivo deve ter menos que 2MB.", (value) =>
+        !value || value[0].size <= _2MB
       ),
     voluntaryServiceDeclaration: yup
       .mixed()
-      .test("type", "Apenas arquivos JPG, PNG e PDF são aceitos!", (value) => 
-        !value || (value && ["application/pdf", "image/png", "image/jpeg"].includes(value[0].type))
+      .test("type", "Carregue um arquivo no formato PDF!", (value) => 
+        !value || (value && value[0].type === "application/pdf")
+      )
+      .test("fileSize", "O arquivo deve ter menos que 2MB.", (value) =>
+        !value || value[0].size <= _2MB
       ),
   }),
 })
