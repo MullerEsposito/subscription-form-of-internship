@@ -73,16 +73,13 @@ export function SubscriptionQuery() {
             <Text>
               { subQueryResponse.message }
             </Text>
-            { subQueryResponse.status === "pending" && (
+            { subQueryResponse.status === "pending" && !subQueryResponse.message.includes("em análise!") && (
               <>
               <Link to={`/subscription/${subQueryResponse.id}`}>
                 <Button size="xs" colorScheme="teal" mt="10px">
                   Corrigir
                 </Button>
               </Link>
-              {/* <Text>
-                Envie os documentos corrigidos para estagio.mcl@trf1.jus.br
-              </Text> */}
               </>
             )}
           </ModalBody>
