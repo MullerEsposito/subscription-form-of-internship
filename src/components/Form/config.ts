@@ -12,6 +12,7 @@ export const defaultValues = {
   pcd: "",
   phone: "",
   period: "",
+  birthdate: "",
   documents: {
     photo: undefined,
     identity: undefined,
@@ -31,6 +32,7 @@ export type SubscriptionInputs = {
   pcd: string;
   phone: string;
   period: string;
+  birthdate: string;
   documents: {
     photo?: FileList;
     identity?: FileList;
@@ -50,6 +52,7 @@ export type ISubscription = {
   pcd: string;
   phone: string;
   period: string;
+  birthdate: string;
   status: "accepted" | "rejected" | "pending";
   accesskey: string;
   documents: {
@@ -86,6 +89,14 @@ const commonShape = {
       if (!value) return true;
       return cpf?.isValid(value);
     }),
+  birthdate: yup
+    .string()
+    .required("Data de nascimento é obrigatório!")
+    .max(104, `Máximo de 10 caracteres!`),
+    // .test("checkCPF", "CPF não é válido!", (value) => {
+    //   if (!value) return true;
+    //   return cpf?.isValid(value);
+    // }),
   phone: yup.string().required("Telefone é obrigatório!"),
   pcd: yup.string().required("Está opção é obrigatória!"),
   period: yup.string().required("Por favor, marque o período em que está matriculado!"),

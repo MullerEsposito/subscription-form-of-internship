@@ -3,15 +3,15 @@ import {
   Image, Flex,
   Link as ChakraLink, Icon, VStack, Textarea,
 } from "@chakra-ui/react";
+import { useHistory, useParams } from "react-router-dom";
 import { BiLinkExternal } from "react-icons/bi"
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState, useContext, FormEvent } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import InputMask from "react-input-mask";
 import { strip } from "@fnando/cpf";
-import { useHistory, useParams } from "react-router-dom";
-import { Input } from "./Input";
 
+import { Input } from "./Input";
 import { InputFile } from "./InputFile";
 import { RadioGroup } from "./RadioGroup";
 import { InputPhoto } from "./InputPhoto";
@@ -78,6 +78,8 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
     try {
       const fd = new FormData();
       data.cpf = strip(data.cpf);
+      data.birthdate = data.birthdate.split('/').reverse().join('-');
+      
       const inputs = data as any;
 
       for (const key in inputs) {
@@ -129,10 +131,12 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
         type: "error",
         messages: {
           header: "Não foi possível realizar a inscrição!",
-          body: err.response?.data?.error,
+          body: err.response?.message,
         },
-        onClose: () => { history.push("/"); },
+        onClose,
+        // onClose: () => { history.push("/"); },
       })
+      console.log(err.message);
     }
 
     onOpen();
@@ -273,6 +277,15 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
         isDisabled={!!isAuthenticated}
       >
         Telefone:
+      </Input>
+      <Input
+        {...register("birthdate")}
+        error={errors.birthdate}
+        as={InputMask}
+        mask="99/99/9999"
+        isDisabled={!!isAuthenticated}
+      >
+        Data de Nascimento:
       </Input>
     </>
   );

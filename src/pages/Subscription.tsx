@@ -6,6 +6,7 @@ import { api } from "../services/api";
 import { ISubscription } from "../components/Form/config";
 import Loader from "react-loader-spinner";
 import { Flex } from "@chakra-ui/react";
+import { parseISO, format } from "date-fns";
 
 import { defaultValues } from "../components/Form/config"
 
@@ -23,6 +24,7 @@ export function Subscription() {
           const { data } = await api.get(`/subscriptions/${id}`, {
             headers: { accesskey }
           }).then(res => res);
+          data.birthdate = format(parseISO(data.birthdate), "dd/MM/yyyy")
           setSubscription(data);
         } catch {
           history.push("/subscription/query");
