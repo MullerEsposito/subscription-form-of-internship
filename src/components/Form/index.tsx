@@ -131,10 +131,9 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
         type: "error",
         messages: {
           header: "Não foi possível realizar a inscrição!",
-          body: err.response?.message,
+          body: err.response?.data?.error,
         },
-        onClose,
-        // onClose: () => { history.push("/"); },
+        onClose: () => { history.push("/"); },
       })
       console.log(err.message);
     }
