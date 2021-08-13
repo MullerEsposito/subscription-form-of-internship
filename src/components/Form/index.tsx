@@ -16,7 +16,7 @@ import { InputFile } from "./InputFile";
 import { RadioGroup } from "./RadioGroup";
 import { InputPhoto } from "./InputPhoto";
 
-import { pcdOptions, periodOptions } from "../../data";
+import { colorOptions, pcdOptions, periodOptions } from "../../data";
 import { api } from "../../services/api";
 import imgRejected from "../../assets/rejected.png"
 import imgAccepted from "../../assets/accepted.png"
@@ -27,6 +27,7 @@ import { ISubscription, schema, schemaUpdate, SubscriptionInputs } from "./confi
 import { SubscriptionsContext } from "../../context/SubscriptionsContext";
 import { AuthenticationContext } from "../../context/AuthenticationContext";
 import { IModal, Modal } from "../Modal";
+import { Select } from "./Select";
 
 interface IFormProps extends React.CSSProperties {
   defaultValues: SubscriptionInputs;
@@ -215,14 +216,14 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
       >
         Histórico Escolar:
       </InputFile>
-      <InputFile
+      {/* <InputFile
         name="documents.voluntaryServiceDeclaration"
         control={control}
         error={errors.documents?.voluntaryServiceDeclaration}
         accept="application/pdf"
       >
         Certidão emitida pela Justiça Federal declarando prestação de serviço voluntário:
-      </InputFile>
+      </InputFile> */}
     </Box>
   );
 
@@ -238,9 +239,9 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
         <ChakraLink href={`${process.env.REACT_APP_BASE_URL}/files/${strip(defaultValues.cpf)}/schoolRecords.pdf`} isExternal>
           Histórico Escolar <Icon as={BiLinkExternal} mx="2px" />
         </ChakraLink>
-        <ChakraLink href={`${process.env.REACT_APP_BASE_URL}/files/${strip(defaultValues.cpf)}/voluntaryServiceDeclaration.pdf`} isExternal>
+        {/* <ChakraLink href={`${process.env.REACT_APP_BASE_URL}/files/${strip(defaultValues.cpf)}/voluntaryServiceDeclaration.pdf`} isExternal>
           Certidão emitida pela Justiça Federal declarando prestação de serviço voluntário <Icon as={BiLinkExternal} mx="2px" />
-        </ChakraLink>
+        </ChakraLink> */}
       </VStack>
     )
   }
@@ -283,6 +284,7 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
         as={InputMask}
         mask="99/99/9999"
         isDisabled={!!isAuthenticated}
+        maxW="150px"
       >
         Data de Nascimento:
       </Input>
@@ -442,6 +444,16 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
 
         <Grid templateColumns={isShortScreen ? "1fr" : "1fr 1fr"} gap="10px">
           {renderInputs()}
+
+          <Select 
+            {...register("color")}
+            error={errors.color}
+            options={colorOptions} 
+            isDisabled={!!isAuthenticated}
+            placeholder="Selecione a cor"
+          >
+            Cor:
+          </Select>
 
           {renderRadiosGroup()}
         </Grid>

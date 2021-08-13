@@ -13,6 +13,7 @@ export const defaultValues = {
   phone: "",
   period: "",
   birthdate: "",
+  color: "",
   documents: {
     photo: undefined,
     identity: undefined,
@@ -33,6 +34,7 @@ export type SubscriptionInputs = {
   phone: string;
   period: string;
   birthdate: string;
+  color: string;
   documents: {
     photo?: FileList;
     identity?: FileList;
@@ -55,6 +57,7 @@ export type ISubscription = {
   birthdate: string;
   status: "accepted" | "rejected" | "pending";
   accesskey: string;
+  color: "white" | "black" | "brown" | "yellow" | "indian";
   documents: {
     photo?: FileList;
     identity?: FileList;
@@ -97,6 +100,9 @@ const commonShape = {
     //   if (!value) return true;
     //   return cpf?.isValid(value);
     // }),
+  color: yup
+    .string()
+    .required("Escolha uma cor!"),
   phone: yup.string().required("Telefone é obrigatório!"),
   pcd: yup.string().required("Está opção é obrigatória!"),
   period: yup.string().required("Por favor, marque o período em que está matriculado!"),
