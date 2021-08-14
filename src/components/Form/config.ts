@@ -13,7 +13,7 @@ export const defaultValues = {
   pcd: "",
   phone: "",
   period: "",
-  birthdate: undefined,
+  birthdate: "",
   color: "",
   documents: {
     photo: undefined,
@@ -34,7 +34,7 @@ export type SubscriptionInputs = {
   pcd: string;
   phone: string;
   period: string;
-  birthdate?: Date;
+  birthdate: string;
   color: string;
   documents: {
     photo?: FileList;
@@ -55,7 +55,7 @@ export type ISubscription = {
   pcd: string;
   phone: string;
   period: string;
-  birthdate: Date;
+  birthdate: string;
   status: "accepted" | "rejected" | "pending";
   accesskey: string;
   color: "white" | "black" | "brown" | "yellow" | "indian";
@@ -94,12 +94,11 @@ const commonShape = {
       return cpf?.isValid(value);
     }),
   birthdate: yup
-    .date()
+    .mixed()
     .required("Data de nascimento é obrigatório!")
-    .max(new Date(), "Data de nascimento inválida!")
     .test("rangeDate", "Idade mínima inválida!", (value) => {
       if (!value) return true;
-      const years = Math.abs(differenceInCalendarYears(value, new Date()));
+      const years = Math.abs(differenceInCalendarYears(new Date(value), new Date()));
       return years < 17 ? false : true;
     }),
   color: yup

@@ -24,7 +24,7 @@ export function Subscription() {
           const { data } = await api.get(`/subscriptions/${id}`, {
             headers: { accesskey }
           }).then(res => res);
-          data.birthdate = format(parseISO(data.birthdate), "dd/MM/yyyy")
+          data.birthdate = format(parseISO(data.birthdate), "yyyy-MM-dd")
           setSubscription(data);
         } catch {
           history.push("/subscription/query");

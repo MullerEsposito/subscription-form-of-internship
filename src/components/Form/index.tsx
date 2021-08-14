@@ -74,18 +74,16 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
     rejected: imgRejected,
     pending: imgPending,
   };
-
   const onSubmit: SubmitHandler<SubscriptionInputs> = async (data) => {
     try {
       const fd = new FormData();
       data.cpf = strip(data.cpf);
-      // data.birthdate = data.birthdate.split('/').reverse().join('-');
       
       const inputs = data as any;
 
       for (const key in inputs) {
         if (inputs.hasOwnProperty(key)) {
-          if (typeof inputs[key] === "object") {
+          if (typeof inputs[key] === "object" && key !== "birthdate") {
             const documents = inputs[key];
             for (const keyNest in documents) {
               if (documents[keyNest]) {
@@ -132,9 +130,10 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
         type: "error",
         messages: {
           header: "Não foi possível realizar a inscrição!",
-          body: err.response?.data?.error,
+          body: err.response?.data?.error ?? err.message,
         },
-        onClose: () => { history.push("/"); },
+        onClose,
+        // onClose: () => { history.push("/"); },
       })
       console.log(err.message);
     }
