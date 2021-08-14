@@ -79,7 +79,7 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
     try {
       const fd = new FormData();
       data.cpf = strip(data.cpf);
-      data.birthdate = data.birthdate.split('/').reverse().join('-');
+      // data.birthdate = data.birthdate.split('/').reverse().join('-');
       
       const inputs = data as any;
 
@@ -281,10 +281,11 @@ export function Form({ defaultValues, subscription: sub, ...rest }: IFormProps):
       <Input
         {...register("birthdate")}
         error={errors.birthdate}
-        as={InputMask}
-        mask="99/99/9999"
+        type="date"
+        max="2021-01-01"
+        min="1950-01-01"
         isDisabled={!!isAuthenticated}
-        maxW="150px"
+        maxW="180px"
       >
         Data de Nascimento:
       </Input>

@@ -1,5 +1,6 @@
 import * as yup from "yup";
 import * as cpf from "@fnando/cpf";
+import { differenceInCalendarYears } from "date-fns"
 
 const _2MB = 2048000;
 
@@ -12,7 +13,7 @@ export const defaultValues = {
   pcd: "",
   phone: "",
   period: "",
-  birthdate: "",
+  birthdate: undefined,
   color: "",
   documents: {
     photo: undefined,
@@ -33,7 +34,7 @@ export type SubscriptionInputs = {
   pcd: string;
   phone: string;
   period: string;
-  birthdate: string;
+  birthdate?: Date;
   color: string;
   documents: {
     photo?: FileList;
@@ -54,7 +55,7 @@ export type ISubscription = {
   pcd: string;
   phone: string;
   period: string;
-  birthdate: string;
+  birthdate: Date;
   status: "accepted" | "rejected" | "pending";
   accesskey: string;
   color: "white" | "black" | "brown" | "yellow" | "indian";
@@ -93,13 +94,14 @@ const commonShape = {
       return cpf?.isValid(value);
     }),
   birthdate: yup
-    .string()
+    .date()
     .required("Data de nascimento é obrigatório!")
-    .max(104, `Máximo de 10 caracteres!`),
-    // .test("checkCPF", "CPF não é válido!", (value) => {
-    //   if (!value) return true;
-    //   return cpf?.isValid(value);
-    // }),
+    .max(new Date(), "Data de nascimento inválida!")
+    .test("rangeDate", "Idade mínima inválida!", (value) => {
+      if (!value) return true;
+      const years = Math.abs(differenceInCalendarYears(value, new Date()));
+      return years < 17 ? false : true;
+    }),
   color: yup
     .string()
     .required("Escolha uma cor!"),
