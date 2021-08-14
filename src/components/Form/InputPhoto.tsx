@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useRef } from "react";
 import { FormControl, Input as ChakraInput, InputProps as ChakraInputProps, Icon, Box, Image, Tooltip } from "@chakra-ui/react";
 import { BsPersonSquare } from "react-icons/bs";
@@ -11,7 +11,9 @@ interface InputPhotoProps extends ChakraInputProps {
   error?: FieldError;
 }
 
-export const InputPhoto = React.memo(({ error, control, name, ...rest }: InputPhotoProps): JSX.Element => {
+export const InputPhoto = ({
+  error, control, name, ...rest 
+}: InputPhotoProps): JSX.Element => {
   const inputPhoto = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(!!error);
 
@@ -19,6 +21,8 @@ export const InputPhoto = React.memo(({ error, control, name, ...rest }: InputPh
 
   useEffect(() => {
     setIsOpen(!!error);
+    const top = inputPhoto.current?.getBoundingClientRect().y;
+    window.scroll({ top, behavior: "smooth" });
     setTimeout(() => setIsOpen(false), 3000);
   }, [error]);
 
@@ -56,6 +60,6 @@ export const InputPhoto = React.memo(({ error, control, name, ...rest }: InputPh
       />
     </FormControl>
   )
-});
+};
 
 InputPhoto.displayName = 'InputPhoto';
