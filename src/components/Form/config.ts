@@ -72,15 +72,15 @@ const commonShape = {
   candidateName: yup
     .string()
     .required("Nome é obrigatório!")
-    .matches(/^[a-z\sáãóõôíúü]+$/i, "Apenas letras!"),
+    .matches(/^[a-z\sáãóõôíúüé]+$/i, "Apenas letras!"),
   collegeName: yup
     .string()
     .required("Nome da instituição é obrigatório!")
-    .matches(/^[a-z\sáãóõôíú]+$/i, "Apenas letras!"),
+    .matches(/^[a-z\sáãóõôíúé]+$/i, "Apenas letras!"),
   address: yup
     .string()
     .required("Endereço é obrigatório!")
-    .matches(/^[a-z\s\d.,-áãóõôíú]+$/i, "Apenas caracteres alfanúmericos!"),
+    .matches(/^[a-z\s\d.,-áãóõôíúé]+$/i, "Apenas caracteres alfanúmericos!"),
   email: yup
     .string()
     .required("E-mail é obrigatório")
