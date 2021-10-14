@@ -46,7 +46,7 @@ export function SubscriptionsList(): JSX.Element {
       </Text>
       <Box 
         overflowY="scroll" 
-        maxH="90%" 
+        maxH="55vh" 
         maxW="950px" 
       >
         <Table 
@@ -54,45 +54,44 @@ export function SubscriptionsList(): JSX.Element {
           colorScheme="green" 
           minW={["250px", "400px", "600px", "900px"]}
         >
-        <Thead>
-          <Tr>
-            <Th textAlign="center" fontSize="1.125rem" p="0">Nª</Th>
-            <Th textAlign="center" fontSize="1.125rem">Nome</Th>
-            <Th textAlign="center" fontSize="1.125rem">CPF</Th>
-            <Th textAlign="center" fontSize="1.125rem">Status</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {
-            subscriptions.map(sub => (
-              <Tr h="10px" key={sub.id}>
-                <Td p="0" textAlign="center" w="5%">{ sub.id }</Td>
-                <Td w="45%">{ sub.candidateName }</Td>
-                <Td w="25%" p="0" textAlign="center">{ format(sub.cpf) }</Td>
-                <Td w="25%">
-                  <Link to={`/subscription/${sub.id}`} onClick={() => setAccesskey(sub.accesskey)}>
-                    <Box
-                      bg={ sub.status }
-                      borderRadius="10px"
-                      textAlign="center"
-                      fontWeight="bold"
-                      p="2px 10px"
-                      _hover={{
-                        filter: "brightness(140%)",
-                        transition: "filter 0.8s"
-                      }}
-                    >
-                      { sub.status }
-                    </Box>
-                  </Link>
-                </Td>
-              </Tr>
-            ))
-          }
-        </Tbody>
-      </Table>
-    </Box>
-    
-  </Flex>
+          <Thead>
+            <Tr>
+              <Th textAlign="center" fontSize="1.125rem" p="0">Nª</Th>
+              <Th textAlign="center" fontSize="1.125rem">Nome</Th>
+              <Th textAlign="center" fontSize="1.125rem">CPF</Th>
+              <Th textAlign="center" fontSize="1.125rem">Status</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {
+              subscriptions.map(sub => (
+                <Tr h="10px" key={sub.id}>
+                  <Td p="0" textAlign="center" w="5%">{ sub.id }</Td>
+                  <Td w="45%">{ sub.candidateName }</Td>
+                  <Td w="25%" p="0" textAlign="center">{ format(sub.cpf) }</Td>
+                  <Td w="25%">
+                    <Link to={`/subscription/${sub.id}`} onClick={() => setAccesskey(sub.accesskey)}>
+                      <Box
+                        bg={ sub.status }
+                        borderRadius="10px"
+                        textAlign="center"
+                        fontWeight="bold"
+                        p="2px 10px"
+                        _hover={{
+                          filter: "brightness(140%)",
+                          transition: "filter 0.8s"
+                        }}
+                      >
+                        { sub.status }
+                      </Box>
+                    </Link>
+                  </Td>
+                </Tr>
+              ))
+            }
+          </Tbody>
+        </Table>
+      </Box>
+    </Flex>
   )
 }
