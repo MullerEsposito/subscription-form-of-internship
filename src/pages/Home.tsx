@@ -6,9 +6,10 @@ import { GiArchiveResearch } from "react-icons/gi";
 import { Link } from "react-router-dom";
 
 export function Home(): JSX.Element {
-  const endDateSubscription = new Date(2021,9,15);
+  const endDateSubscription = new Date(2021,9,15,23,59);
   const todayDate = new Date();
-  
+  console.log(`Today ${todayDate}
+  endDate ${endDateSubscription}`);
   return (
     <Grid
       templateColumns="repeat(2, 1fr)"
