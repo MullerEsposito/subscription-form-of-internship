@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { Control, FieldError } from "react-hook-form";
-import { SubscriptionInputs } from "./config";
+import { ISubscription } from '../../modules/subscription/types';
 
 type Option = {
   value: string;
@@ -16,7 +16,7 @@ type Option = {
 }
 
 interface RadioGroupProps extends Omit<ChakraRadioGroupProps, 'children' | 'name'> {
-  control?: Control<SubscriptionInputs>;
+  control?: Control<ISubscription>;
   name: string;
   labelBottom?: boolean;
   options: Option[];

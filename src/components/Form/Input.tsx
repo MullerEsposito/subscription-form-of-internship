@@ -1,9 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState, ForwardRefRenderFunction } from 'react';
 import { FormControl, FormLabel, Tooltip, Input as ChakraInput, InputProps as ChakraInputProps } from '@chakra-ui/react';
 import { FieldError } from 'react-hook-form';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { ForwardRefRenderFunction } from 'react';
 
 interface InputProps extends ChakraInputProps {
   maskChar?: string;

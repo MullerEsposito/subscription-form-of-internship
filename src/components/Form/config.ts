@@ -14,7 +14,9 @@ export const defaultValues = {
   phone: "",
   period: "",
   birthdate: "",
+  course: "",
   color: "",
+  privacyTerm: false,
   documents: {
     photo: undefined,
     identity: undefined,
@@ -23,49 +25,6 @@ export const defaultValues = {
     criminalRecordDeclaration: undefined,
     voluntaryServiceDeclaration: undefined,
   },
-}
-
-export type SubscriptionInputs = {
-  candidateName: string;
-  collegeName: string;
-  address: string;
-  email: string;
-  cpf: string;
-  pcd: string;
-  phone: string;
-  period: string;
-  birthdate: string;
-  color: string;
-  documents: {
-    photo?: FileList;
-    identity?: FileList;
-    collegeRegistrationDeclaration?: FileList;
-    schoolRecords?: FileList;
-    voluntaryServiceDeclaration?: FileList;
-  }; 
-}
-
-export type ISubscription = {
-  id: number;
-  candidateName: string;
-  collegeName: string;
-  address: string;
-  email: string;
-  cpf: string;
-  pcd: string;
-  phone: string;
-  period: string;
-  birthdate: string;
-  status: "accepted" | "rejected" | "pending";
-  accesskey: string;
-  color: "white" | "black" | "brown" | "yellow" | "indian";
-  documents: {
-    photo?: FileList;
-    identity?: FileList;
-    collegeRegistrationDeclaration?: FileList;
-    schoolRecords?: FileList;
-    voluntaryServiceDeclaration?: FileList;
-  }; 
 }
 
 const commonShape = {
@@ -101,15 +60,19 @@ const commonShape = {
       const years = Math.abs(differenceInCalendarYears(new Date(value), new Date()));
       return years < 17 ? false : true;
     }),
+  course: yup
+    .string()
+    .required("Escolha um curso!"),
   color: yup
     .string()
     .required("Escolha uma cor!"),
   phone: yup.string().required("Telefone é obrigatório!"),
   pcd: yup.string().required("Está opção é obrigatória!"),
   period: yup.string().required("Por favor, marque o período em que está matriculado!"),
+  privacyTerm: yup.boolean().oneOf([true], "Você precisa aceitar os termos de privacidade pra realizar a inscrição!"),
 }
 
-export const schemaUpdate = yup.object().shape({
+export const updateSubscriptionSchema = yup.object().shape({
   ...commonShape,
   identity: yup
     .mixed()
@@ -146,7 +109,7 @@ export const schemaUpdate = yup.object().shape({
 });
 
 
-export const schema = yup.object().shape({
+export const createSubscriptionSchema = yup.object().shape({
   ...commonShape,
   documents: yup.object().shape({
     photo: yup
