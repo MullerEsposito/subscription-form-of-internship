@@ -1,5 +1,6 @@
 import { CreateSubscriptionService } from "./CreateSubscriptionService";
 import { ISubscription } from "../../types";
+import { getErrorMessage } from "../../../../util";
 
 type IResponse = {
   status: "success";
@@ -17,8 +18,8 @@ export class CreateSubscriptionController {
       const response = await this.createSubscriptionService.execute(data);
 
       return { status: "success", content: response };
-    } catch (error: any) {
-      return { status: "error", content: error.message };
+    } catch (error) {
+      return { status: "error", content: getErrorMessage(error) };
     }
   }
 }
