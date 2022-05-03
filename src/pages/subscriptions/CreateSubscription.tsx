@@ -5,7 +5,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import InputMask from "react-input-mask";
 
-import { createSubscriptionSchema, defaultValues } from "../../components/Form/config"
+import { defaultValues } from "../../components/Form/config"
 import { Input } from "../../components/Form/Input";
 import { InputCheckBox } from "../../components/Form/InputCheckBox";
 import { InputFile } from "../../components/Form/InputFile";
@@ -17,6 +17,7 @@ import { Form } from "../../components/Form";
 import { colorOptions, courseOptions, pcdOptions, periodOptions } from "../../data";
 import { getCreateSubscriptionController } from "../../modules/subscription/useCases/createSubscription";
 import { ISubscription } from "../../modules/subscription/types";
+import { createSubscriptionSchema } from "../../modules/subscription/useCases/createSubscription/yup";
 
 export function CreateSubscription() {
   const [modalConfig, setModalConfig] = useState<IModal>({} as IModal);
@@ -45,13 +46,13 @@ export function CreateSubscription() {
       <Text>
         Número de inscrição:
         {' '}
-        <strong>{id}</strong>
+        <strong data-testid="inscription.id">{id}</strong>
         .
       </Text>
       <Text>
         Chave de acesso:
         {' '}
-        <strong>{accesskey}</strong>
+        <strong data-testid="inscription.accesskey">{accesskey}</strong>
         .
       </Text>
     </>
@@ -59,7 +60,7 @@ export function CreateSubscription() {
 
   const onSubmit: SubmitHandler<ISubscription> = async (data) => {
     const response = await getCreateSubscriptionController().handle(data);
-
+    
     if (response.status === "success") {
       setModalConfig({
         type: response.status,
@@ -99,16 +100,29 @@ export function CreateSubscription() {
 
   const renderInputs = (): JSX.Element => (
     <>
-      <Input {...register("candidateName")} error={errors.candidateName}>
+      <Input 
+        id="form.name"
+        {...register("candidateName")} 
+        error={errors.candidateName}
+      >
         Nome do Candidato:
       </Input>
-      <Input {...register("collegeName")} error={errors.collegeName}>
+      <Input 
+        id="form.college"
+        {...register("collegeName")} 
+        error={errors.collegeName} 
+      >
         Instituição de Ensino:
       </Input>
-      <Input {...register("address")} error={errors.address}>
+      <Input 
+        id="form.address"
+        {...register("address")} 
+        error={errors.address}
+      >
         Endereço:
       </Input>
       <Input
+        id="form.cpf"
         {...register("cpf")}
         error={errors.cpf}
         as={InputMask}
@@ -116,10 +130,16 @@ export function CreateSubscription() {
       >
         CPF:
       </Input>
-      <Input {...register("email")} error={errors.email} type="email">
+      <Input 
+        id="form.email"
+        {...register("email")} 
+        error={errors.email} 
+        type="email"
+      >
         E-mail:
       </Input>
       <Input
+        id="form.phone"
         {...register("phone")}
         error={errors.phone}
         as={InputMask}
@@ -128,6 +148,7 @@ export function CreateSubscription() {
         Telefone:
       </Input>
       <Input
+        id="form.birthdate"
         {...register("birthdate")}
         error={errors.birthdate}
         type="date"
@@ -147,6 +168,7 @@ export function CreateSubscription() {
         name="period"
         render={({ field }) => (
           <RadioGroup
+            id="form.period"
             options={periodOptions}
             error={errors.period}
             labelBottom
@@ -161,9 +183,9 @@ export function CreateSubscription() {
         name="pcd"
         render={({ field }) => (
           <RadioGroup
+            id="form.pcd"
             options={pcdOptions}
             error={errors.pcd}
-
             w="150px"
             {...field}
           >
@@ -177,6 +199,7 @@ export function CreateSubscription() {
   const renderInputsFile = (): JSX.Element => (
     <Box m="20px 0">
       <InputFile
+        id="form.identity"
         name="documents.identity"
         control={control}
         error={errors.documents?.identity}
@@ -185,6 +208,7 @@ export function CreateSubscription() {
         Documento de Identificação:
       </InputFile>
       <InputFile
+        id="form.declaration"
         name="documents.collegeRegistrationDeclaration"
         control={control}
         error={errors.documents?.collegeRegistrationDeclaration}
@@ -193,6 +217,7 @@ export function CreateSubscription() {
         Declaração da instituição de ensino em que está matriculado (a):
       </InputFile>
       <InputFile
+        id="form.records"
         name="documents.schoolRecords"
         control={control}
         error={errors.documents?.schoolRecords}
@@ -200,21 +225,6 @@ export function CreateSubscription() {
       >
         Histórico Escolar:
       </InputFile>
-      <InputCheckBox
-        {...register("privacyTerm")}
-        error={errors.privacyTerm}
-      >
-        Aceito os { 
-          renderModalLink({
-              label: "termos de privacidade",
-              type: "info", 
-              message: { 
-                header: "Termo de Privacidade",
-                body: "Conteúdo do Termo de Privacidade"
-              }  
-          })
-        } para a participação deste processo seletivo.      
-      </InputCheckBox>
     </Box>
   );
 
@@ -224,6 +234,7 @@ export function CreateSubscription() {
       onSubmit={handleSubmit(onSubmit)}
       label="Ficha de Inscrição">
       <InputPhoto
+        id="form.photo"
         name="documents.photo"
         control={control}
         error={errors.documents?.photo}
@@ -234,6 +245,7 @@ export function CreateSubscription() {
           {renderInputs()}
 
           <Select
+            id="form.course"
             {...register("course")}
             error={errors.color}
             options={courseOptions} 
@@ -243,6 +255,7 @@ export function CreateSubscription() {
           </Select>
 
           <Select 
+            id="form.color"
             {...register("color")}
             error={errors.color}
             options={colorOptions} 
@@ -255,6 +268,21 @@ export function CreateSubscription() {
         </Grid>
 
           {renderInputsFile()}
+          <InputCheckBox
+            {...register("privacyTerm")}
+            error={errors.privacyTerm}
+          >
+            Aceito os { 
+              renderModalLink({
+                  label: "termos de privacidade",
+                  type: "info", 
+                  message: { 
+                    header: "Termo de Privacidade",
+                    body: "Conteúdo do Termo de Privacidade"
+                  }  
+              })
+            } para a participação deste processo seletivo.      
+          </InputCheckBox>
           <Box alignSelf="center" mt="10px">
             <Button
               type="submit"
