@@ -41,6 +41,7 @@
     "@types/react-router-dom": "^5.1.8",
     "add": "^2.0.6",
     "cypress": "^9.6.0",
+    "cypress-file-upload": "^5.0.8",
     "json-server": "^0.16.3",
     "json-server-uploader": "^1.0.3",
     "prettier": "^2.3.2",
@@ -51,7 +52,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress:open": "cypress open"
   },
   "eslintConfig": {
     "extends": [
