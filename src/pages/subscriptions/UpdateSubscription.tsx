@@ -15,7 +15,6 @@ import { ISubscription } from "../../modules/subscription/types";
 import { Input } from "../../components/Form/Input";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { updateSubscriptionSchema } from "../../components/Form/config";
 import { Select } from "../../components/Form/Select";
 import { colorOptions, courseOptions, pcdOptions, periodOptions } from "../../data";
 import { RadioGroup } from "../../components/Form/RadioGroup";
@@ -24,6 +23,7 @@ import { IModal, Modal } from "../../components/Modal";
 import { getUpdateStatusSubscriptionController } from "../../modules/subscription/useCases/updateStatusSubscription";
 import { CorrectionRequestForm } from "../../components/Form/CorrectionRequestForm";
 import { getGetSubscriptionController } from "../../modules/subscription/useCases/getSubscription";
+import { updateSubscriptionSchema } from "../../modules/subscription/useCases/updateStatusSubscription/yup";
 
 export function UpdateSubscription() {
   const [subscription, setSubscription] = useState<ISubscription>({} as ISubscription);
