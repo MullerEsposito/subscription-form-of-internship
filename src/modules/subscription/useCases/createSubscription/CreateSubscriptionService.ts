@@ -12,15 +12,17 @@ export class CreateSubscriptionService {
     data.cpf = strip(data.cpf);
     
     const fd = this.createFormData(data);
-    console.log(fd);
-    const { data: { id, accesskey }} = await api.post("/subscriptions", fd, {
+    
+    const { id, accesskey } = await api.post<ICreateSubscriptionResponse>("/subscriptions", fd, {
       headers: { "Content-Type": "multipart/form-data" },
-    }).then((res) => res);
-
+    })
+    .then(({ data }) => data)
+    .catch(({ response }) => { throw new Error(response?.data.error ?? "Servidor fora do ar!") });
+    
     return { id, accesskey };    
   };
   
-  private createFormData(data: any): FormData {
+  private createFormData(data: any): FormData {    
     const fd = new FormData();
 
     for (const key in data) {
@@ -37,7 +39,7 @@ export class CreateSubscriptionService {
         fd.append(key, data[key]);
       }
     };
-
+    
     return fd;
   }
 }
