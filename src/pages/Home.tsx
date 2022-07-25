@@ -8,8 +8,7 @@ import { Link } from "react-router-dom";
 export function Home(): JSX.Element {
   const endDateSubscription = new Date(2021,9,15,23,59);
   const todayDate = new Date();
-  console.log(`Today ${todayDate}
-  endDate ${endDateSubscription}`);
+  
   return (
     <Grid
       templateColumns="repeat(2, 1fr)"
@@ -20,7 +19,8 @@ export function Home(): JSX.Element {
       flex={1}
     >
       { 
-        todayDate <= endDateSubscription && (
+        // todayDate <= endDateSubscription && 
+        (
           <VStack justifyContent="center">
             <ChakraLink
               as={Link}

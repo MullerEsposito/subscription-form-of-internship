@@ -1,13 +1,12 @@
-import { Flex, Table, Tbody, Td, Box, Th, Thead, Tr, Text } from "@chakra-ui/react";
+import { useState, useContext, useEffect } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { Flex, Table, Tbody, Td, Box, Th, Thead, Tr, Text } from "@chakra-ui/react";
 import { format } from "@fnando/cpf";
-import { useEffect } from "react";
 import { api } from "../services/api";
-import { useState } from "react";
-import { ISubscription } from "../components/Form/config";
-import { useContext } from "react";
-import { SubscriptionsContext } from "../context/SubscriptionsContext";
 import Loader from "react-loader-spinner";
+
+import { SubscriptionsContext } from "../context/SubscriptionsContext";
+import { ISubscription } from "../modules/subscription/types";
 
 export function SubscriptionsList(): JSX.Element {
   const [subscriptions, setSubscriptions] = useState<ISubscription[] | undefined>();

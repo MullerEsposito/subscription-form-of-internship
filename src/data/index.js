@@ -19,3 +19,9 @@ export const colorOptions = [
   { label: 'Amarela', value: 'yellow' },
   { label: 'Indígena', value: 'indian' },
 ]
+
+export const courseOptions = [
+  { label: 'Direito', value: 'right' },
+  { label: 'Administração', value: 'admnistration' },
+  { label: 'Contabilidade', value: 'contability' },
+]

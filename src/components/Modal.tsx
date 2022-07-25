@@ -5,7 +5,7 @@ import {
 export interface IModal {
   isOpen?: boolean;
   type: "success" | "error" | "info";
-  messages: {
+  message: {
     header: string;
     body: React.ReactNode;
   },
@@ -25,7 +25,7 @@ const color = {
   }
 }
 
-export function Modal({ isOpen=false, onClose=()=>{}, type, messages }: IModal): JSX.Element {
+export function Modal({ isOpen=false, onClose=()=>{}, type, message }: IModal): JSX.Element {
   return (
     <ChakraModal
       isOpen={isOpen}
@@ -36,10 +36,10 @@ export function Modal({ isOpen=false, onClose=()=>{}, type, messages }: IModal):
         bg={color.bg[type]}
         color={color.text[type]}
       >
-        <ModalHeader>{ messages?.header }</ModalHeader>
+        <ModalHeader>{ message?.header }</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          { messages?.body }
+          { message?.body }
         </ModalBody>
       </ModalContent>
     </ChakraModal>
