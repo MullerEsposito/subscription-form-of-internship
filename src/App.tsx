@@ -22,7 +22,7 @@ function App(): JSX.Element {
       display="flex"
       flexDirection="column"
     >
-      <Header title="Seleção de Estágio 2021" />
+      <Header title="Seleção de Estágio 2022" />
       <AuthenticationProvider>
         <SubscriptionsProvider>
           <Switch>
