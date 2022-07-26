@@ -25,7 +25,7 @@ import { CorrectionRequestForm } from "../../components/Form/CorrectionRequestFo
 import { getGetSubscriptionController } from "../../modules/subscription/useCases/getSubscription";
 import { updateSubscriptionSchema } from "../../modules/subscription/useCases/updateStatusSubscription/yup";
 
-export function UpdateSubscription() {
+export function ShowSubscription() {
   const [subscription, setSubscription] = useState<ISubscription>({} as ISubscription);
   const { id } = useParams<{ id: string }>();
   const { accesskey } = useContext(SubscriptionsContext);
@@ -67,30 +67,28 @@ export function UpdateSubscription() {
 
   const renderInputs = (): JSX.Element => (
     <>
-      <Input {...register("candidateName")} error={errors.candidateName} isDisabled>
+      <Input value={subscription.candidateName} isDisabled>
         Nome do Candidato:
       </Input>
-      <Input {...register("collegeName")} error={errors.collegeName} isDisabled>
+      <Input value={subscription.collegeName} isDisabled>
         Instituição de Ensino:
       </Input>
-      <Input {...register("address")} error={errors.address} isDisabled>
+      <Input value={subscription.address} isDisabled>
         Endereço:
       </Input>
       <Input
-        {...register("cpf")}
-        error={errors.cpf}
+        value={subscription.cpf}
         as={InputMask}
         mask="999.999.999-99"
         isDisabled
       >
         CPF:
       </Input>
-      <Input {...register("email")} error={errors.email} type="email" isDisabled>
+      <Input value={subscription.email} type="email" isDisabled>
         E-mail:
       </Input>
       <Input
-        {...register("phone")}
-        error={errors.phone}
+        value={subscription.phone}
         as={InputMask}
         mask="(99) 99999-9999"
         isDisabled
@@ -98,8 +96,7 @@ export function UpdateSubscription() {
         Telefone:
       </Input>
       <Input
-        {...register("birthdate")}
-        error={errors.birthdate}
+        value={subscription.birthdate}
         type="date"
         max="2021-01-01"
         min="1950-01-01"
@@ -119,9 +116,9 @@ export function UpdateSubscription() {
         render={({ field }) => (
           <RadioGroup
             options={periodOptions}
-            error={errors.period}
             labelBottom
             {...field}
+            value={subscription.period}
           >
             Período em que está matriculado:
           </RadioGroup>
@@ -136,6 +133,7 @@ export function UpdateSubscription() {
             error={errors.pcd}
             w="150px"
             {...field}
+            value={Number(subscription.pcd)}
           >
             PCD:
           </RadioGroup>
@@ -234,8 +232,7 @@ export function UpdateSubscription() {
           {renderInputs()}
 
           <Select
-            {...register("course")}
-            error={errors.color}
+            value={subscription.course}
             options={courseOptions} 
             isDisabled
             placeholder="Selecione seu curso"
@@ -244,8 +241,7 @@ export function UpdateSubscription() {
           </Select>
 
           <Select 
-            {...register("color")}
-            error={errors.color}
+            value={subscription.color}
             options={colorOptions} 
             isDisabled
             placeholder="Selecione a cor"

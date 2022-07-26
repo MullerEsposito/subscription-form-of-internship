@@ -11,7 +11,7 @@ import { Control, FieldError } from "react-hook-form";
 import { ISubscription } from '../../modules/subscription/types';
 
 type Option = {
-  value: string;
+  value: string | number;
   label: string;
 }
 

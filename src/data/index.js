@@ -8,8 +8,8 @@ export const periodOptions = [
 ]
 
 export const pcdOptions = [
-  { label: 'Sim', value: 'sim' },
-  { label: 'Não', value: 'nao' },
+  { label: 'Sim', value: 1 },
+  { label: 'Não', value: 0 },
 ]
 
 export const colorOptions = [

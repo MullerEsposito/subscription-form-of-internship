@@ -8,7 +8,7 @@ import { SubscriptionsProvider } from "./context/SubscriptionsContext";
 import { Home } from "./pages/Home";
 import { SignIn } from "./pages/SignIn";
 import { CreateSubscription } from "./pages/subscriptions/CreateSubscription";
-import { UpdateSubscription } from "./pages/subscriptions/UpdateSubscription";
+import { ShowSubscription } from "./pages/subscriptions/ShowSubscription";
 import { SubscriptionQuery } from "./pages/SubscriptionQuery";
 import { SubscriptionsList } from "./pages/SubscriptionsList";
 
@@ -27,7 +27,7 @@ function App(): JSX.Element {
         <SubscriptionsProvider>
           <Switch>
             <Route path="/subscription/query" component={SubscriptionQuery} />
-            <Route path="/subscription/:id" component={UpdateSubscription} />
+            <Route path="/subscription/:id" component={ShowSubscription} />
             <Route path="/subscription" component={CreateSubscription} />
             <Route path="/subscriptions" component={SubscriptionsList} />
             <Route path="/signin" component={SignIn} />
